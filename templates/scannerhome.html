@@ -43,14 +43,44 @@
             background-color: rgb(255, 193, 193);
         }
         .ema-positive {
-            background-color:  rgb(208, 255, 208);
+            background-color: rgb(208, 255, 208);
         }
         .ema-negative {
-            background-color:rgb(255, 193, 193);
+            background-color: rgb(255, 193, 193);
         }
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Stock Data</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pricing</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="table-wrapper">
         <h3>Stock Data - Reliance</h3>
         {% if error %}
@@ -69,9 +99,18 @@
                             <th>Low</th>
                             <th>Close</th>
                             <th>Volume</th>
-                            <th>EMA 20</th>
-                            <th>EMA 50</th>
-                            <th>Supertrend</th>
+                            <th>
+                                EMA 20
+                                <i class="fa fa-wand-magic-sparkles" data-toggle="modal" data-target="#ema20Modal"></i>
+                            </th>
+                            <th>
+                                EMA 50
+                                <i class="fa fa-wand-magic-sparkles" data-toggle="modal" data-target="#ema50Modal"></i>
+                            </th>
+                            <th>
+                                Supertrend
+                                <i class="fa fa-wand-magic-sparkles" data-toggle="modal" data-target="#supertrendModal"></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,5 +138,89 @@
             </div>
         {% endif %}
     </div>
+
+    <!-- EMA 20 Modal -->
+    <div class="modal fade" id="ema20Modal" tabindex="-1" role="dialog" aria-labelledby="ema20ModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ema20ModalLabel">EMA 20 Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="ema20Input">Input for EMA 20</label>
+                            <input type="text" class="form-control" id="ema20Input" placeholder="Enter value for EMA 20">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EMA 50 Modal -->
+    <div class="modal fade" id="ema50Modal" tabindex="-1" role="dialog" aria-labelledby="ema50ModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ema50ModalLabel">EMA 50 Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="ema50Input">Input for EMA 50</label>
+                            <input type="text" class="form-control" id="ema50Input" placeholder="Enter value for EMA 50">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supertrend Modal -->
+    <div class="modal fade" id="supertrendModal" tabindex="-1" role="dialog" aria-labelledby="supertrendModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="supertrendModalLabel">Supertrend Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="supertrendInput">Input for Supertrend</label>
+                            <input type="text" class="form-control" id="supertrendInput" placeholder="Enter value for Supertrend">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/528c9fbb89.js" crossorigin="anonymous"></script>
+
 </body>
 </html>

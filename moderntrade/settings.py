@@ -122,4 +122,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
-ALPHA_VANTAGE_API_KEY = '4UDTH4C8D430REJJ'
+

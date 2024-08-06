@@ -9,30 +9,49 @@
         body {
             background-color: #f8f9fa;
         }
-        .container {
-            margin-top: 30px;
-        }
         h1 {
+            margin-top: 30px;
             margin-bottom: 20px;
             color: #343a40;
+            text-align: center;
         }
         .alert {
             margin-bottom: 20px;
         }
+        .table-wrapper {
+            width: 90%;
+            margin: 30px auto; /* Center the table and add top margin */
+        }
         table {
-            margin-top: 20px;
+            border: 1px solid #dee2e6; /* Border around the table */
+            width: 100%; /* Make the table full-width of its container */
+        }
+        th, td {
+            border: 1px solid #dee2e6; /* Border around each cell */
         }
         th {
-            background-color: #007bff;
+            background-color: #6fb4ff;
             color: white;
         }
         td {
             text-align: right;
         }
+        .supertrend-positive {
+            background-color: rgb(208, 255, 208);
+        }
+        .supertrend-negative {
+            background-color: rgb(255, 193, 193);
+        }
+        .ema-positive {
+            background-color:  rgb(208, 255, 208);
+        }
+        .ema-negative {
+            background-color:rgb(255, 193, 193);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="table-wrapper">
         <h1>Stock Data</h1>
         {% if error %}
             <div class="alert alert-danger">
@@ -40,36 +59,44 @@
                 <strong>Details:</strong> {{ details }}
             </div>
         {% else %}
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Open</th>
-                        <th>High</th>
-                        <th>Low</th>
-                        <th>Close</th>
-                        <th>Volume</th>
-                        <th>EMA 20</th>
-                        <th>EMA 50</th>
-                        <th>Supertrend</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
                         <tr>
-                            <td>{{ row.Date }}</td>
-                            <td>{{ row.Open }}</td>
-                            <td>{{ row.High }}</td>
-                            <td>{{ row.Low }}</td>
-                            <td>{{ row.Close }}</td>
-                            <td>{{ row.Volume }}</td>
-                            <td>{{ row.EMA20 }}</td>
-                            <td>{{ row.EMA50 }}</td>
-                            <td>{{ row.Supertrend }}</td>
+                            <th>Date</th>
+                            <th>Open</th>
+                            <th>High</th>
+                            <th>Low</th>
+                            <th>Close</th>
+                            <th>Volume</th>
+                            <th>EMA 20</th>
+                            <th>EMA 50</th>
+                            <th>Supertrend</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                            <tr>
+                                <td>{{ row.Datetime }}</td>
+                                <td>{{ row.Open }}</td>
+                                <td>{{ row.High }}</td>
+                                <td>{{ row.Low }}</td>
+                                <td>{{ row.Close }}</td>
+                                <td>{{ row.Volume }}</td>
+                                <td class="{% if row.EMA20 < row.Close %}ema-positive{% elif row.EMA20 > row.Close %}ema-negative{% endif %}">
+                                    {{ row.EMA20 }}
+                                </td>
+                                <td class="{% if row.EMA50 < row.Close %}ema-positive{% elif row.EMA50 > row.Close %}ema-negative{% endif %}">
+                                    {{ row.EMA50 }}
+                                </td>
+                                <td class="{% if row.Supertrend < row.Close %}supertrend-positive{% elif row.Supertrend > row.Close %}supertrend-negative{% endif %}">
+                                    {{ row.Supertrend }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
     </div>
 </body>

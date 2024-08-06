@@ -84,7 +84,7 @@ def scannerhome(request):
 
     data = get_intraday_data(symbol)
     
-    print(data)  # Debug statement to check data format
+ # Debug statement to check data format
     
     if isinstance(data, dict) and 'error' in data:
         context = data

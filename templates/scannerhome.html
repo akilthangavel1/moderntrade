@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Data</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+        table {
+            margin-top: 20px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        td {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Data</h1>
+        {% if error %}
+            <div class="alert alert-danger">
+                <strong>Error:</strong> {{ error }}<br>
+                <strong>Details:</strong> {{ details }}
+            </div>
+        {% else %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Open</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Close</th>
+                        <th>Volume</th>
+                        <th>EMA 20</th>
+                        <th>EMA 50</th>
+                        <th>Supertrend</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr>
+                            <td>{{ row.Date }}</td>
+                            <td>{{ row.Open }}</td>
+                            <td>{{ row.High }}</td>
+                            <td>{{ row.Low }}</td>
+                            <td>{{ row.Close }}</td>
+                            <td>{{ row.Volume }}</td>
+                            <td>{{ row.EMA20 }}</td>
+                            <td>{{ row.EMA50 }}</td>
+                            <td>{{ row.Supertrend }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>

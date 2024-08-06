@@ -5,7 +5,7 @@ import numpy as np
 import yfinance as yf
 from datetime import datetime, timedelta
 
-def get_intraday_data(symbol, interval='5m'):
+def get_intraday_data(symbol, interval='1m'):
     """
     Fetches intraday stock data for a given symbol using yfinance.
     """
@@ -25,7 +25,7 @@ def get_intraday_data(symbol, interval='5m'):
             df = calculate_ema(df)
             df = calculate_atr(df)
             df = calculate_supertrend(df)
-            df = df[15:]
+            df = df[150:]
             
             # Round numerical fields to 2 decimal points
             numerical_columns = ['Open', 'High', 'Low', 'Close', 'Volume', 'EMA20', 'EMA50', 'ATR', 'Supertrend']

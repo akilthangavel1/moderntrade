@@ -1,0 +1,1 @@
+{"level":"DEBUG","location":"[get_async_call:357] fyersModel","message":{"Status Code":200,"API":"/funds"},"timestamp":"2024-08-15 10:24:59,114+0530","service":"FyersAPIRequest","taskName":"Task-1"}

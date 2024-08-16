@@ -77,11 +77,7 @@ def calculate_supertrend(df, multiplier=2):
     return df
 
 def scannerhome(request):
-    """
-    Handles the request to display the stock scanner homepage.
-    """
     symbol = 'RELIANCE.NS'
-
     data = get_intraday_data(symbol)
     
  # Debug statement to check data format
@@ -95,3 +91,7 @@ def scannerhome(request):
         }
     
     return render(request, "scannerhome.html", context)
+
+
+def homepage(request):
+    return render(request, "homepage.html", {})

@@ -1,0 +1,381 @@
+Expiry: {'date': '29-08-2024', 'expiry': '1724925600'}
+Expiry: {'date': '26-09-2024', 'expiry': '1727344800'}
+Expiry: {'date': '31-10-2024', 'expiry': '1730368800'}
+ASK: 0.8
+BID: 0.75
+LTP: 0.8
+Strike Price: 710
+OI: 147000
+Volume: 117750
+Symbol: NSE:SBIN24AUG710PE
+Option Type: PE
+********************
+ASK: 106.05
+BID: 103.5
+LTP: 97.8
+Strike Price: 710
+OI: 1500
+Volume: 4500
+Symbol: NSE:SBIN24AUG710CE
+Option Type: CE
+********************
+ASK: 95.3
+BID: 93.05
+LTP: 88.15
+Strike Price: 720
+OI: 35250
+Volume: 0
+Symbol: NSE:SBIN24AUG720CE
+Option Type: CE
+********************
+ASK: 0.8
+BID: 0.7
+LTP: 0.8
+Strike Price: 720
+OI: 993000
+Volume: 681000
+Symbol: NSE:SBIN24AUG720PE
+Option Type: PE
+********************
+ASK: 0.95
+BID: 0.9
+LTP: 0.9
+Strike Price: 730
+OI: 282000
+Volume: 693750
+Symbol: NSE:SBIN24AUG730PE
+Option Type: PE
+********************
+ASK: 87.45
+BID: 83.9
+LTP: 78.15
+Strike Price: 730
+OI: 17250
+Volume: 2250
+Symbol: NSE:SBIN24AUG730CE
+Option Type: CE
+********************
+ASK: 1.15
+BID: 1.05
+LTP: 1.1
+Strike Price: 740
+OI: 531750
+Volume: 918750
+Symbol: NSE:SBIN24AUG740PE
+Option Type: PE
+********************
+ASK: 75.75
+BID: 74.15
+LTP: 69.55
+Strike Price: 740
+OI: 43500
+Volume: 3000
+Symbol: NSE:SBIN24AUG740CE
+Option Type: CE
+********************
+ASK: 1.55
+BID: 1.45
+LTP: 1.5
+Strike Price: 750
+OI: 2169750
+Volume: 2980500
+Symbol: NSE:SBIN24AUG750PE
+Option Type: PE
+********************
+ASK: 65.65
+BID: 65.3
+LTP: 65.3
+Strike Price: 750
+OI: 604500
+Volume: 126000
+Symbol: NSE:SBIN24AUG750CE
+Option Type: CE
+********************
+ASK: 56
+BID: 55.05
+LTP: 55.7
+Strike Price: 760
+OI: 116250
+Volume: 72750
+Symbol: NSE:SBIN24AUG760CE
+Option Type: CE
+********************
+ASK: 1.9
+BID: 1.8
+LTP: 1.85
+Strike Price: 760
+OI: 1021500
+Volume: 1809000
+Symbol: NSE:SBIN24AUG760PE
+Option Type: PE
+********************
+ASK: 2.65
+BID: 2.55
+LTP: 2.55
+Strike Price: 770
+OI: 1187250
+Volume: 2412000
+Symbol: NSE:SBIN24AUG770PE
+Option Type: PE
+********************
+ASK: 46.85
+BID: 46.4
+LTP: 46.4
+Strike Price: 770
+OI: 134250
+Volume: 110250
+Symbol: NSE:SBIN24AUG770CE
+Option Type: CE
+********************
+ASK: 3.7
+BID: 3.65
+LTP: 3.75
+Strike Price: 780
+OI: 1899000
+Volume: 4575000
+Symbol: NSE:SBIN24AUG780PE
+Option Type: PE
+********************
+ASK: 37.9
+BID: 37.45
+LTP: 37.5
+Strike Price: 780
+OI: 328500
+Volume: 445500
+Symbol: NSE:SBIN24AUG780CE
+Option Type: CE
+********************
+ASK: 29.55
+BID: 29.3
+LTP: 29.5
+Strike Price: 790
+OI: 298500
+Volume: 1066500
+Symbol: NSE:SBIN24AUG790CE
+Option Type: CE
+********************
+ASK: 5.4
+BID: 5.3
+LTP: 5.3
+Strike Price: 790
+OI: 1479000
+Volume: 3976500
+Symbol: NSE:SBIN24AUG790PE
+Option Type: PE
+********************
+ASK: 7.95
+BID: 7.9
+LTP: 7.9
+Strike Price: 800
+OI: 5896500
+Volume: 12736500
+Symbol: NSE:SBIN24AUG800PE
+Option Type: PE
+********************
+ASK: 21.95
+BID: 21.8
+LTP: 21.9
+Strike Price: 800
+OI: 2440500
+Volume: 8353500
+Symbol: NSE:SBIN24AUG800CE
+Option Type: CE
+********************
+ASK: 11.55
+BID: 11.4
+LTP: 11.45
+Strike Price: 810
+OI: 2859750
+Volume: 7643250
+Symbol: NSE:SBIN24AUG810PE
+Option Type: PE
+********************
+ASK: 15.7
+BID: 15.6
+LTP: 15.7
+Strike Price: 810
+OI: 2983500
+Volume: 12718500
+Symbol: NSE:SBIN24AUG810CE
+Option Type: CE
+********************
+ASK: 16.5
+BID: 16.3
+LTP: 16.5
+Strike Price: 820
+OI: 3276750
+Volume: 3735750
+Symbol: NSE:SBIN24AUG820PE
+Option Type: PE
+********************
+ASK: 10.75
+BID: 10.6
+LTP: 10.6
+Strike Price: 820
+OI: 6460500
+Volume: 12615750
+Symbol: NSE:SBIN24AUG820CE
+Option Type: CE
+********************
+ASK: 22.75
+BID: 22.55
+LTP: 22.7
+Strike Price: 830
+OI: 1469250
+Volume: 1292250
+Symbol: NSE:SBIN24AUG830PE
+Option Type: PE
+********************
+ASK: 6.95
+BID: 6.9
+LTP: 6.95
+Strike Price: 830
+OI: 4067250
+Volume: 7731750
+Symbol: NSE:SBIN24AUG830CE
+Option Type: CE
+********************
+ASK: 4.6
+BID: 4.5
+LTP: 4.5
+Strike Price: 840
+OI: 3979500
+Volume: 7197750
+Symbol: NSE:SBIN24AUG840CE
+Option Type: CE
+********************
+ASK: 30.3
+BID: 30.05
+LTP: 30.2
+Strike Price: 840
+OI: 1368000
+Volume: 659250
+Symbol: NSE:SBIN24AUG840PE
+Option Type: PE
+********************
+ASK: 38.95
+BID: 38.7
+LTP: 39.05
+Strike Price: 850
+OI: 1456500
+Volume: 402000
+Symbol: NSE:SBIN24AUG850PE
+Option Type: PE
+********************
+ASK: 3.35
+BID: 3.25
+LTP: 3.3
+Strike Price: 850
+OI: 7674000
+Volume: 8147250
+Symbol: NSE:SBIN24AUG850CE
+Option Type: CE
+********************
+ASK: 48.25
+BID: 47.8
+LTP: 47.95
+Strike Price: 860
+OI: 1064250
+Volume: 144750
+Symbol: NSE:SBIN24AUG860PE
+Option Type: PE
+********************
+ASK: 2.35
+BID: 2.25
+LTP: 2.25
+Strike Price: 860
+OI: 4095750
+Volume: 3480000
+Symbol: NSE:SBIN24AUG860CE
+Option Type: CE
+********************
+ASK: 57.75
+BID: 57.1
+LTP: 57.35
+Strike Price: 870
+OI: 519000
+Volume: 47250
+Symbol: NSE:SBIN24AUG870PE
+Option Type: PE
+********************
+ASK: 1.8
+BID: 1.7
+LTP: 1.8
+Strike Price: 870
+OI: 3345000
+Volume: 2988750
+Symbol: NSE:SBIN24AUG870CE
+Option Type: CE
+********************
+ASK: 67.15
+BID: 66.8
+LTP: 66.85
+Strike Price: 880
+OI: 1152000
+Volume: 49500
+Symbol: NSE:SBIN24AUG880PE
+Option Type: PE
+********************
+ASK: 1.4
+BID: 1.35
+LTP: 1.35
+Strike Price: 880
+OI: 5050500
+Volume: 2906250
+Symbol: NSE:SBIN24AUG880CE
+Option Type: CE
+********************
+ASK: 1.2
+BID: 1.15
+LTP: 1.15
+Strike Price: 890
+OI: 3442500
+Volume: 2508000
+Symbol: NSE:SBIN24AUG890CE
+Option Type: CE
+********************
+ASK: 77.1
+BID: 75.95
+LTP: 76.1
+Strike Price: 890
+OI: 508500
+Volume: 55500
+Symbol: NSE:SBIN24AUG890PE
+Option Type: PE
+********************
+ASK: 86.85
+BID: 85.8
+LTP: 86
+Strike Price: 900
+OI: 849750
+Volume: 54750
+Symbol: NSE:SBIN24AUG900PE
+Option Type: PE
+********************
+ASK: 1
+BID: 0.9
+LTP: 0.95
+Strike Price: 900
+OI: 13593750
+Volume: 5317500
+Symbol: NSE:SBIN24AUG900CE
+Option Type: CE
+********************
+ASK: 98.15
+BID: 93.7
+LTP: 95.65
+Strike Price: 910
+OI: 130500
+Volume: 6000
+Symbol: NSE:SBIN24AUG910PE
+Option Type: PE
+********************
+ASK: 0.75
+BID: 0.7
+LTP: 0.7
+Strike Price: 910
+OI: 1779750
+Volume: 525750
+Symbol: NSE:SBIN24AUG910CE
+Option Type: CE
+********************

@@ -1,8 +1,5 @@
 from fyers_apiv3 import fyersModel
 import creds
-import pandas as pd
-from pprint import pprint
-
 
 client_id = creds.client_id
 access_token = creds.access_token
@@ -13,8 +10,5 @@ data = {
     "strikecount":1,
     "timestamp": ""
 }
-
-
 response = fyers.optionchain(data=data);
-pprint(response['data'])
-
+print(response)

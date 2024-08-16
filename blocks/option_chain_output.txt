@@ -10,6 +10,7 @@ Volume: 117750
 Symbol: NSE:SBIN24AUG710PE
 Option Type: PE
 ********************
+
 ASK: 106.05
 BID: 103.5
 LTP: 97.8
@@ -19,6 +20,7 @@ Volume: 4500
 Symbol: NSE:SBIN24AUG710CE
 Option Type: CE
 ********************
+
 ASK: 95.3
 BID: 93.05
 LTP: 88.15
@@ -28,6 +30,7 @@ Volume: 0
 Symbol: NSE:SBIN24AUG720CE
 Option Type: CE
 ********************
+
 ASK: 0.8
 BID: 0.7
 LTP: 0.8
@@ -37,6 +40,7 @@ Volume: 681000
 Symbol: NSE:SBIN24AUG720PE
 Option Type: PE
 ********************
+
 ASK: 0.95
 BID: 0.9
 LTP: 0.9
@@ -46,6 +50,7 @@ Volume: 693750
 Symbol: NSE:SBIN24AUG730PE
 Option Type: PE
 ********************
+
 ASK: 87.45
 BID: 83.9
 LTP: 78.15
@@ -55,6 +60,7 @@ Volume: 2250
 Symbol: NSE:SBIN24AUG730CE
 Option Type: CE
 ********************
+
 ASK: 1.15
 BID: 1.05
 LTP: 1.1
@@ -64,6 +70,7 @@ Volume: 918750
 Symbol: NSE:SBIN24AUG740PE
 Option Type: PE
 ********************
+
 ASK: 75.75
 BID: 74.15
 LTP: 69.55
@@ -73,6 +80,7 @@ Volume: 3000
 Symbol: NSE:SBIN24AUG740CE
 Option Type: CE
 ********************
+
 ASK: 1.55
 BID: 1.45
 LTP: 1.5
@@ -82,6 +90,7 @@ Volume: 2980500
 Symbol: NSE:SBIN24AUG750PE
 Option Type: PE
 ********************
+
 ASK: 65.65
 BID: 65.3
 LTP: 65.3
@@ -91,6 +100,7 @@ Volume: 126000
 Symbol: NSE:SBIN24AUG750CE
 Option Type: CE
 ********************
+
 ASK: 56
 BID: 55.05
 LTP: 55.7
@@ -100,6 +110,7 @@ Volume: 72750
 Symbol: NSE:SBIN24AUG760CE
 Option Type: CE
 ********************
+
 ASK: 1.9
 BID: 1.8
 LTP: 1.85
@@ -109,6 +120,7 @@ Volume: 1809000
 Symbol: NSE:SBIN24AUG760PE
 Option Type: PE
 ********************
+
 ASK: 2.65
 BID: 2.55
 LTP: 2.55
@@ -118,6 +130,7 @@ Volume: 2412000
 Symbol: NSE:SBIN24AUG770PE
 Option Type: PE
 ********************
+
 ASK: 46.85
 BID: 46.4
 LTP: 46.4
@@ -127,6 +140,7 @@ Volume: 110250
 Symbol: NSE:SBIN24AUG770CE
 Option Type: CE
 ********************
+
 ASK: 3.7
 BID: 3.65
 LTP: 3.75

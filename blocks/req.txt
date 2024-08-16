@@ -1,0 +1,9 @@
+One screener 
+connecting multiple account 
+backend - connecting historical api 
+access token refresh token
+logging in the automatically for access token and refresh token
+setting up the data feed for specific strategy
+create ui for the screener
+dynamic stock list change 
+adding buy sell button for everystock

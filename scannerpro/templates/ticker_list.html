@@ -1,0 +1,10 @@
+<h2>Tickers</h2>
+<a href="{% url 'ticker_create' %}">Add New Ticker</a>
+<ul>
+    {% for ticker in tickers %}
+        <li>{{ ticker.ticker_symbol }} - {{ ticker.ticker_name }} 
+            <a href="{% url 'ticker_update' ticker.pk %}">Edit</a> 
+            <a href="{% url 'ticker_delete' ticker.pk %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>

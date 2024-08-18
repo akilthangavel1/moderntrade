@@ -1,0 +1,18 @@
+<h2>Edit Ticker</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="ticker_name">Ticker Name:</label>
+    <input type="text" id="ticker_name" name="ticker_name" value="{{ ticker.ticker_name }}">
+    
+    <label for="ticker_symbol">Ticker Symbol:</label>
+    <input type="text" id="ticker_symbol" name="ticker_symbol" value="{{ ticker.ticker_symbol }}">
+    
+    <label for="ticker_sector">Sector:</label>
+    <input type="text" id="ticker_sector" name="ticker_sector" value="{{ ticker.ticker_sector }}">
+    
+    <label for="ticker_market_cap">Market Cap:</label>
+    <input type="text" id="ticker_market_cap" name="ticker_market_cap" value="{{ ticker.ticker_market_cap }}">
+    
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'ticker_list' %}">Back to List</a>

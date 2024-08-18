@@ -1,10 +1,72 @@
-<h2>Tickers</h2>
-<a href="{% url 'ticker_create' %}">Add New Ticker</a>
-<ul>
-    {% for ticker in tickers %}
-        <li>{{ ticker.ticker_symbol }} - {{ ticker.ticker_name }} 
-            <a href="{% url 'ticker_update' ticker.pk %}">Edit</a> 
-            <a href="{% url 'ticker_delete' ticker.pk %}">Delete</a>
-        </li>
-    {% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticker List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .actions {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tickers</h2>
+        <a href="{% url 'ticker_create' %}">
+            <button>Add New Ticker</button>
+        </a>
+        <ul>
+            {% for ticker in tickers %}
+            <li>
+                <strong>{{ ticker.ticker_symbol }}</strong> - {{ ticker.ticker_name }}  - {{ ticker.ticker_sector }}  - {{ ticker.ticker_market_cap }} 
+                <span class="actions">
+                    <a href="{% url 'ticker_update' ticker.pk %}">Edit</a> | 
+                    <a href="{% url 'ticker_delete' ticker.pk %}">Delete</a>
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

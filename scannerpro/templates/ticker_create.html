@@ -1,18 +1,67 @@
-<h2>Create Ticker</h2>
-<form method="post">
-    {% csrf_token %}
-    <label for="ticker_name">Ticker Name:</label>
-    <input type="text" id="ticker_name" name="ticker_name">
-    
-    <label for="ticker_symbol">Ticker Symbol:</label>
-    <input type="text" id="ticker_symbol" name="ticker_symbol">
-    
-    <label for="ticker_sector">Sector:</label>
-    <input type="text" id="ticker_sector" name="ticker_sector">
-    
-    <label for="ticker_market_cap">Market Cap:</label>
-    <input type="text" id="ticker_market_cap" name="ticker_market_cap">
-    
-    <button type="submit">Create</button>
-</form>
-<a href="{% url 'ticker_list' %}">Back to List</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Ticker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create Ticker</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="ticker_name">Ticker Name:</label>
+            <input type="text" id="ticker_name" name="ticker_name" required>
+
+            <label for="ticker_symbol">Ticker Symbol:</label>
+            <input type="text" id="ticker_symbol" name="ticker_symbol" required>
+
+            <label for="ticker_sector">Sector:</label>
+            <input type="text" id="ticker_sector" name="ticker_sector" required>
+
+            <label for="ticker_market_cap">Market Cap:</label>
+            <input type="text" id="ticker_market_cap" name="ticker_market_cap" required>
+
+            <button type="submit">Create</button>
+        </form>
+        <a href="{% url 'ticker_list' %}">Back to List</a>
+    </div>
+</body>
+</html>

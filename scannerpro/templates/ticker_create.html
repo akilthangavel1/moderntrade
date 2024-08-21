@@ -49,12 +49,15 @@
             {% csrf_token %}
             <label for="ticker_name">Ticker Name:</label>
             <input type="text" id="ticker_name" name="ticker_name" required>
-
+            
             <label for="ticker_symbol">Ticker Symbol:</label>
             <input type="text" id="ticker_symbol" name="ticker_symbol" required>
 
             <label for="ticker_sector">Sector:</label>
             <input type="text" id="ticker_sector" name="ticker_sector" required>
+
+            <label for="ticker_sub_sector">Sub-Sector (Optional):</label>
+            <input type="text" name="ticker_sub_sector" id="ticker_sub_sector">
 
             <label for="ticker_market_cap">Market Cap:</label>
             <input type="text" id="ticker_market_cap" name="ticker_market_cap" required>

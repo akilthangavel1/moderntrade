@@ -33,20 +33,39 @@
             padding: 10px 20px;
             cursor: pointer;
             border-radius: 5px;
+            margin-bottom: 20px;
         }
         button:hover {
             background-color: #2980b9;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
-        li {
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
+        table, th, td {
+            border: 1px solid #ddd;
         }
-        .actions {
-            margin-left: 20px;
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .actions a {
+            color: #3498db;
+            margin-right: 10px;
+        }
+        .actions a:hover {
+            text-decoration: underline;
+        }
+        .no-data {
+            text-align: center;
+            color: #999;
+            font-size: 16px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -56,17 +75,37 @@
         <a href="{% url 'ticker_create' %}">
             <button>Add New Ticker</button>
         </a>
-        <ul>
-            {% for ticker in tickers %}
-            <li>
-                <strong>{{ ticker.ticker_symbol }}</strong> - {{ ticker.ticker_name }}  - {{ ticker.ticker_sector }}  - {{ ticker.ticker_market_cap }} 
-                <span class="actions">
-                    <a href="{% url 'ticker_update' ticker.pk %}">Edit</a> | 
-                    <a href="{% url 'ticker_delete' ticker.pk %}">Delete</a>
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
+        {% if tickers %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Sector</th>
+                    <th>Sub-Sector</th>
+                    <th>Market Cap</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticker in tickers %}
+                <tr>
+                    <td>{{ ticker.ticker_symbol }}</td>
+                    <td>{{ ticker.ticker_name }}</td>
+                    <td>{{ ticker.ticker_sector }}</td>
+                    <td>{{ ticker.ticker_sub_sector }}</td>
+                    <td>{{ ticker.ticker_market_cap }}</td>
+                    <td class="actions">
+                        <a href="{% url 'ticker_update' ticker.pk %}">Edit</a>
+                        <a href="{% url 'ticker_delete' ticker.pk %}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-data">No tickers available.</p>
+        {% endif %}
     </div>
 </body>
 </html>

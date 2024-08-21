@@ -108,6 +108,7 @@ def ticker_create(request):
         ticker_name = request.POST.get('ticker_name')
         ticker_symbol = request.POST.get('ticker_symbol')
         ticker_sector = request.POST.get('ticker_sector')
+        ticker_sub_sector = request.POST.get('ticker_sub_sector')  # New field
         ticker_market_cap = request.POST.get('ticker_market_cap')
         
         # Create and save the new ticker
@@ -115,13 +116,13 @@ def ticker_create(request):
             ticker_name=ticker_name,
             ticker_symbol=ticker_symbol,
             ticker_sector=ticker_sector,
+            ticker_sub_sector=ticker_sub_sector,  # New field
             ticker_market_cap=ticker_market_cap
         )
         
         return redirect('ticker_list')
     
     return render(request, 'ticker_create.html')
-
 
 def ticker_list(request):
     tickers = TickerBase.objects.all()
@@ -134,8 +135,13 @@ def ticker_update(request, pk):
     if request.method == 'POST':
         ticker.ticker_name = request.POST.get('ticker_name')
         ticker.ticker_symbol = request.POST.get('ticker_symbol')
-        ticker.ticker_sector = request.POST.get('ticker_sector')
-        ticker.ticker_market_cap = request.POST.get('ticker_market_cap')
+        ticker_sector = request.POST.get('ticker_sector')
+        ticker_sub_sector = request.POST.get('ticker_sub_sector')  # New field
+        ticker_market_cap = request.POST.get('ticker_market_cap')
+
+        ticker.ticker_sector = ticker_sector
+        ticker.ticker_sub_sector = ticker_sub_sector  # New field
+        ticker.ticker_market_cap = ticker_market_cap
 
         ticker.save()
         

@@ -60,7 +60,7 @@
 
 # server {
 #     listen 80;
-#     server_name 51.20.191.107;
+#     server_name 16.171.143.91;
 
 #     location = /favicon.ico { access_log off; log_not_found off; }
 #     location /static/ {

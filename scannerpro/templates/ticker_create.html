@@ -34,7 +34,7 @@
             display: flex;
             flex-direction: column;
         }
-        input {
+        input, select {
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ddd;
@@ -54,13 +54,37 @@
             <input type="text" id="ticker_symbol" name="ticker_symbol" required>
 
             <label for="ticker_sector">Sector:</label>
-            <input type="text" id="ticker_sector" name="ticker_sector" required>
+            <select id="ticker_sector" name="ticker_sector" required>
+                <option value="Automobile">Automobile</option>
+                <option value="Banking">Banking</option>
+                <option value="Capital Goods">Capital Goods</option>
+                <option value="Cement">Cement</option>
+                <option value="Chemicals">Chemicals</option>
+                <option value="Finance">Finance</option>
+                <option value="FMCG">FMCG</option>
+                <option value="Index">Index</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Media">Media</option>
+                <option value="Metals">Metals</option>
+                <option value="Oil and Gas">Oil and Gas</option>
+                <option value="Pharma">Pharma</option>
+                <option value="Power">Power</option>
+                <option value="Realty">Realty</option>
+                <option value="Technology">Technology</option>
+                <option value="Telecom">Telecom</option>
+                <option value="Textile">Textile</option>
+                <option value="Others">Others</option>
+            </select>
 
             <label for="ticker_sub_sector">Sub-Sector (Optional):</label>
             <input type="text" name="ticker_sub_sector" id="ticker_sub_sector">
 
             <label for="ticker_market_cap">Market Cap:</label>
-            <input type="text" id="ticker_market_cap" name="ticker_market_cap" required>
+            <select id="ticker_market_cap" name="ticker_market_cap" required>
+                <option value="Large Cap">Large Cap</option>
+                <option value="Mid Cap">Mid Cap</option>
+                <option value="Small Cap">Small Cap</option>
+            </select>
 
             <button type="submit">Create</button>
         </form>

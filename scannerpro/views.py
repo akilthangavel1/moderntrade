@@ -6,16 +6,13 @@ from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from .models import TickerBase
+import json
 
 
 def scannerhome(request):
-    
-    context = {
-        'data': {},
-        'symbol': {}  # Add symbol to context for template use
-    }
-    
-    return render(request, "scannerhome.html", context)
+    tickers = TickerBase.objects.all().values('ticker_name', 'ticker_sector', 'ticker_sub_sector', 'ticker_market_cap')
+    tickers_json = json.dumps(list(tickers))  # Convert QuerySet to list and then to JSON
+    return render(request, "scannerhome.html", {'tickers': tickers_json})
 
 
 def homepage(request):

@@ -96,7 +96,7 @@
                     <td>{{ ticker.ticker_sub_sector }}</td>
                     <td>{{ ticker.ticker_market_cap }}</td>
                     <td class="actions">
-                        <a href="{% url 'ticker_update' ticker.pk %}">Edit</a>
+                        <a href="{% url 'ticker_update' ticker.pk %}">Update</a>
                         <a href="{% url 'ticker_delete' ticker.pk %}">Delete</a>
                     </td>
                 </tr>
@@ -109,3 +109,4 @@
     </div>
 </body>
 </html>
+   

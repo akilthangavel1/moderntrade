@@ -6,34 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statement Summary</title>
     <style>
-        /* general styling */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: #121212;
+            /* Dark background for the body */
+            color: #e0e0e0;
+            /* Light text color */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #1e1e1e;
+            /* Dark background for the table */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
             overflow: hidden;
         }
 
         thead {
-            background-color: #007bff;
-            color: #fff;
+            background-color: #4c4747;
+            /* Slightly lighter dark background for the header */
+            color: #ffffff;
+            /* White text color */
         }
 
         th,
         td {
             padding: 12px 15px;
             text-align: center;
-            border-right: 1px solid #ddd;
+            border-right: 1px solid #444;
+            /* Darker border color */
         }
 
         th {
@@ -47,7 +53,8 @@
         }
 
         tr {
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #444;
+            /* Darker border color */
         }
 
         tr:last-child td {
@@ -59,11 +66,13 @@
         }
 
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #2c2c2c;
+            /* Slightly lighter dark background for even rows */
         }
 
         tbody tr:hover {
-            background-color: #f1f1f1;
+            background-color: #333333;
+            /* Hover effect background */
         }
 
         @media screen and (max-width: 600px) {
@@ -87,13 +96,15 @@
             }
 
             tr {
-                border-bottom: 3px solid #ddd;
+                border-bottom: 3px solid #444;
+                /* Darker border color */
                 display: block;
                 margin-bottom: .625em;
             }
 
             td {
-                border-bottom: 1px solid #ddd;
+                border-bottom: 1px solid #444;
+                /* Darker border color */
                 display: block;
                 font-size: .8em;
                 text-align: right;
@@ -121,15 +132,18 @@
                 <th scope="col">Sector</th>
                 <th scope="col">Sub-Sector</th>
                 <th scope="col">Market Cap</th>
+                <th scope="col">LTP</th>
+                <th scope="col">Daily % change</th>
+                <th scope="col">Market % Cap</th>
             </tr>
         </thead>
         <tbody id="stock-table-body">
-            <tr>
+            <!-- <tr>
                 <td data-label="Stock Name">Muthoot Finance </td>
                 <td data-label="Sector">Finance</td>
                 <td data-label="Sub-Sector">Gold NBFC</td>
                 <td data-label="Market Cap">Mid Cap</td>
-            </tr>
+            </tr> -->
         </tbody>
     </table>
 
@@ -138,10 +152,9 @@
         var tickers = JSON.parse('{{ tickers|safe }}');
         console.log(tickers);
         var tableBody = document.getElementById('stock-table-body');
-
-        tickers.forEach(function(ticker) {
+        tickers.forEach(function (ticker) {
             var row = document.createElement('tr');
-            
+
             var cellStockName = document.createElement('td');
             cellStockName.textContent = ticker.ticker_name;
             row.appendChild(cellStockName);
@@ -158,13 +171,20 @@
             cellMarketCap.textContent = ticker.ticker_market_cap;
             row.appendChild(cellMarketCap);
 
+            var cellLTP = document.createElement('td');
+            cellLTP.textContent = ticker.LTP;
+            row.appendChild(cellLTP);
+
+            var cellDailyChange = document.createElement('td');
+            cellDailyChange.textContent = ticker.Daily_Change;
+            row.appendChild(cellDailyChange);
+
+            var cellWeeklyChange = document.createElement('td');
+            cellWeeklyChange.textContent = ticker.Weekly_Change;
+            row.appendChild(cellWeeklyChange);
+
             tableBody.appendChild(row);
         });
-    </script>
-    <script>
-        
-
-        
     </script>
 </body>
 

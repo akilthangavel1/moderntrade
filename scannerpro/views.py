@@ -68,9 +68,7 @@ def ticker_update(request, pk):
 
 def ticker_delete(request, pk):
     ticker = get_object_or_404(TickerBase, pk=pk)
-    
     if request.method == 'POST':
         ticker.delete()
         return redirect('ticker_list')
-    
     return render(request, 'ticker_delete.html', {'ticker': ticker})

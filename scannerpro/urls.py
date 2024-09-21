@@ -9,6 +9,7 @@ urlpatterns = [
     path('create/', views.ticker_create, name='ticker_create'),
     path('update/<int:pk>/', views.ticker_update, name='ticker_update'),
     path('delete/<int:pk>/', views.ticker_delete, name='ticker_delete'),
+    path('events/', views.sse_view, name='sse_view'),
    
 ]
 

@@ -9,6 +9,7 @@ from .models import TickerBase
 import json
 
 
+
 def scannerhome(request):
     tickers = TickerBase.objects.all().values('ticker_name', 'ticker_sector', 'ticker_sub_sector', 'ticker_market_cap')
     tickers_json = json.dumps(list(tickers))  # Convert QuerySet to list and then to JSON
@@ -72,3 +73,34 @@ def ticker_delete(request, pk):
         ticker.delete()
         return redirect('ticker_list')
     return render(request, 'ticker_delete.html', {'ticker': ticker})
+
+import time
+import json
+from django.http import StreamingHttpResponse
+from .models import TickerBase
+
+def event_stream():
+    while True:
+        ticker_details = TickerBase.objects.all()
+        ticker_list = []
+        for ticker in ticker_details:
+            ticker_data = {
+                "name": ticker.ticker_name,
+                "symbol": ticker.ticker_symbol,
+                "sector": ticker.ticker_sector,
+                "sub_sector": ticker.ticker_sub_sector,
+                "market_cap": ticker.ticker_market_cap,
+            }
+            ticker_list.append(ticker_data)
+        
+        if ticker_list:  # Check if the ticker list is not empty
+            yield f"data: {json.dumps(ticker_list)}\n\n"
+        else:
+            yield f"data: No data available\n\n"
+
+        time.sleep(1)
+
+def sse_view(request):
+    response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
+    response['Cache-Control'] = 'no-cache'
+    return response

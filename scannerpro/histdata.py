@@ -40,3 +40,20 @@ def process_ohlc_data(response):
     df['datetime'] = pd.to_datetime(df['timestamp'], unit='s')
     df = df[['datetime', 'open', 'high', 'low', 'close', 'volume']]
     return df
+
+
+import pandas as pd
+
+def calculate_changes(df):
+    if not isinstance(df, pd.DataFrame) or df.empty or df.shape[0] < 2:
+        return None, None, None
+    
+    latest_close = df.iloc[-1]['close']
+    daily_change = latest_close - df.iloc[-2]['close']
+    
+    if df.shape[0] >= 6:
+        weekly_change = latest_close - df.iloc[-6]['close']
+    else:
+        weekly_change = None  # Not enough data for weekly change
+    
+    return latest_close, daily_change, weekly_change

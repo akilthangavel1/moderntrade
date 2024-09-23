@@ -71,3 +71,19 @@ class TickerBase(models.Model):
 
     def __str__(self):
         return f"{self.ticker_symbol} ({self.ticker_sector}) - {self.ticker_market_cap}"
+
+
+# models.py in your Django app (e.g., scannerpro/models.py)
+from django.db import models
+from django.core.exceptions import ValidationError
+
+class AccessToken(models.Model):
+    value = models.TextField()
+
+    def save(self, *args, **kwargs):
+        if not self.pk and AccessToken.objects.exists():
+            raise ValidationError('Only one instance of SingleRecord is allowed.')
+        return super(AccessToken, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.value

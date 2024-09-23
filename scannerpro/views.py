@@ -74,31 +74,63 @@ def ticker_delete(request, pk):
         return redirect('ticker_list')
     return render(request, 'ticker_delete.html', {'ticker': ticker})
 
+
+from .models import AccessToken
+
+def get_access_token_value():
+    try:
+        token_instance = AccessToken.objects.get()  # This assumes only one instance exists
+        return token_instance.value
+    except AccessToken.DoesNotExist:
+        return None  # Handle the case where no token exists
+    except AccessToken.MultipleObjectsReturned:
+        return None  # Shouldn't happen, but just in case
+
+def process_symbol(symbol):
+    return "NSE:"+symbol+"-EQ"
+
+
 import time
 import json
 from django.http import StreamingHttpResponse
 from .models import TickerBase
+from .histdata import fetch_ohlc_data, process_ohlc_data, calculate_changes
+
 
 def event_stream():
     while True:
         ticker_details = TickerBase.objects.all()
         ticker_list = []
         for ticker in ticker_details:
+            from_date = (datetime.now() - timedelta(days=31)).strftime("%d/%m/%Y")
+            to_date = datetime.now().strftime("%d/%m/%Y")
+            symbol = process_symbol(ticker.ticker_symbol) 
+            resolution = "D"
+            client_id = "MMKQTWNJH3-100"
+            access_token = get_access_token_value()
+            ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
+            processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
+            if process_ohlc_data:
+                latest_close, daily_change, weekly_change = calculate_changes(processed_daily_ohlc)
+            
             ticker_data = {
                 "name": ticker.ticker_name,
                 "symbol": ticker.ticker_symbol,
                 "sector": ticker.ticker_sector,
                 "sub_sector": ticker.ticker_sub_sector,
                 "market_cap": ticker.ticker_market_cap,
+                "ltp": latest_close,
+                "daily_change": daily_change,
+                "weekly_change": weekly_change
             }
+            
             ticker_list.append(ticker_data)
-        
-        if ticker_list:  # Check if the ticker list is not empty
+        if ticker_list:
             yield f"data: {json.dumps(ticker_list)}\n\n"
         else:
             yield f"data: No data available\n\n"
 
-        time.sleep(1)
+        time.sleep(20)
 
 def sse_view(request):
     response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')

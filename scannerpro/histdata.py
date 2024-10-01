@@ -54,6 +54,6 @@ def calculate_changes(df):
     if df.shape[0] >= 6:
         weekly_change = latest_close - df.iloc[-6]['close']
     else:
-        weekly_change = None  # Not enough data for weekly change
+        weekly_change = None  
     
     return latest_close, daily_change, weekly_change

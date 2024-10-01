@@ -87,7 +87,7 @@ def get_access_token_value():
         return None  # Shouldn't happen, but just in case
 
 def process_symbol(symbol):
-    return "NSE:"+symbol+"-EQ"
+    return "NSE:"+symbol+"24OCTFUT"
 
 
 import time
@@ -109,6 +109,7 @@ def event_stream():
             client_id = "MMKQTWNJH3-100"
             access_token = get_access_token_value()
             ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
+            # print(ohlc_daily_data)
             processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
             if process_ohlc_data:
                 latest_close, daily_change, weekly_change = calculate_changes(processed_daily_ohlc)

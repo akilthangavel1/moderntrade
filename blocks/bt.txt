@@ -1,0 +1,29 @@
+2024-09-27 09:30:56 NSE:BBTC-EQ Supertrend BUY - Reached
+2024-09-27 09:39:56 NSE:TRIVENI-EQ Supertrend BUY - Wrong signal
+2024-09-27 09:51:14 NSE:SUNDRMFAST-EQ Supertrend BUY - Wrong signal
+2024-09-27 10:30:35 NSE:UNITDSPR-EQ Supertrend SELL - Wrong signal
+2024-09-27 10:49:22 NSE:INDIGOPNTS-EQ Supertrend BUY - Wrong signal
+2024-09-27 10:59:56 NSE:EXIDEIND-EQ Supertrend BUY - Reached
+2024-09-27 11:08:30 NSE:WIPRO-EQ Supertrend BUY - Wrong signal
+2024-09-27 11:24:57 NSE:CONCOR-EQ Supertrend BUY - Wrong signal
+2024-09-27 11:25:18 NSE:DEEPAKNTR-EQ Supertrend BUY - Wrong signal
+2024-09-27 11:44:48 NSE:RECLTD-EQ Supertrend BUY  - Wrong signal
+2024-09-27 11:55:55 NSE:NSLNISP-EQ Supertrend BUY - Reached
+2024-09-27 12:23:14 NSE:SJVN-EQ Supertrend BUY - Reached
+2024-09-27 12:29:43 NSE:EPL-EQ Supertrend BUY - Reached
+2024-09-27 12:44:31 NSE:ICICIGI-EQ Supertrend SELL - Wrong signal
+2024-09-27 12:46:56 NSE:MAHLIFE-EQ Supertrend SELL  - Reached
+2024-09-27 12:48:14 NSE:PHOENIXLTD-EQ Supertrend SELL - Wrong signal
+2024-09-27 12:58:32 NSE:JSWENERGY-EQ Supertrend SELL - Reached
+2024-09-27 12:59:41 NSE:MMTC-EQ Supertrend SELL - Wrong signal
+# 2024-09-27 13:05:36 NSE:ARE&M-EQ Supertrend BUY
+2024-09-27 13:22:40 NSE:GSPL-EQ Supertrend BUY - Wrong signal
+2024-09-27 14:12:20 NSE:ZOMATO-EQ Supertrend SELL - Reached
+2024-09-27 14:15:44 NSE:BRIGADE-EQ Supertrend BUY - Reached
+2024-09-27 14:22:51 NSE:LT-EQ Supertrend SELL  - Wrong signal
+2024-09-27 14:26:13 NSE:SBICARD-EQ Supertrend BUY - Wrong signal
+
+23/9
+
+# some signal changing from green to red and red to green
+# Find trending market

@@ -629,6 +629,13 @@
                 <th scope="col">LTP</th>
                 <th scope="col">Daily Change</th>
                 <th scope="col">Weekly Change</th>
+                <th scope="col">Prev. Day Open</th>
+                <th scope="col">Prev. Day High</th>
+                <th scope="col">Prev. Day Low</th>
+                <th scope="col">Prev. Day Close</th>
+                <th scope="col">Latest Open</th>
+                <th scope="col">Latest High</th>
+                <th scope="col">Latest Low</th>
             </tr>
         </thead>
         <tbody id="ticker-table-body">
@@ -643,8 +650,8 @@
             const data = event.data;
             const tickerList = JSON.parse(data);
             const tableBody = document.getElementById('ticker-table-body');
-            
-            tableBody.innerHTML = '';  // Clear previous data
+
+            tableBody.innerHTML = ''; // Clear previous data
 
             tickerList.forEach(function(ticker) {
                 const row = document.createElement('tr');
@@ -676,6 +683,34 @@
                 const cellWeeklyChange = document.createElement('td');
                 cellWeeklyChange.textContent = ticker.weekly_change !== null ? ticker.weekly_change.toFixed(2) : "N/A";
                 row.appendChild(cellWeeklyChange);
+
+                const cellPreviousDayOpen = document.createElement('td');
+                cellPreviousDayOpen.textContent = ticker.previous_day_open !== null ? ticker.previous_day_open.toFixed(2) : "N/A";
+                row.appendChild(cellPreviousDayOpen);
+
+                const cellPreviousDayHigh = document.createElement('td');
+                cellPreviousDayHigh.textContent = ticker.previous_day_high !== null ? ticker.previous_day_high.toFixed(2) : "N/A";
+                row.appendChild(cellPreviousDayHigh);
+
+                const cellPreviousDayLow = document.createElement('td');
+                cellPreviousDayLow.textContent = ticker.previous_day_low !== null ? ticker.previous_day_low.toFixed(2) : "N/A";
+                row.appendChild(cellPreviousDayLow);
+
+                const cellPreviousDayClose = document.createElement('td');
+                cellPreviousDayClose.textContent = ticker.previous_day_close !== null ? ticker.previous_day_close.toFixed(2) : "N/A";
+                row.appendChild(cellPreviousDayClose);
+
+                const cellLatestOpen = document.createElement('td');
+                cellLatestOpen.textContent = ticker.latest_open !== null ? ticker.latest_open.toFixed(2) : "N/A";
+                row.appendChild(cellLatestOpen);
+
+                const cellLatestHigh = document.createElement('td');
+                cellLatestHigh.textContent = ticker.latest_high !== null ? ticker.latest_high.toFixed(2) : "N/A";
+                row.appendChild(cellLatestHigh);
+
+                const cellLatestLow = document.createElement('td');
+                cellLatestLow.textContent = ticker.latest_low !== null ? ticker.latest_low.toFixed(2) : "N/A";
+                row.appendChild(cellLatestLow);
 
                 tableBody.appendChild(row);
             });

@@ -97,20 +97,25 @@ def format_symbol(symbol):
 
 def generate_event_stream():
     while True:
-        ticker_details = TickerBase.objects.all()
         ticker_list = []
-        
-        for ticker in ticker_details:
-            from_date = (datetime.now() - timedelta(days=31)).strftime("%d/%m/%Y")
-            to_date = datetime.now().strftime("%d/%m/%Y")
-            symbol = format_symbol(ticker.ticker_symbol)
-            resolution = "D"
-            client_id = "MMKQTWNJH3-100"
-            access_token = get_access_token()
-            ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
-            processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
+        try:
+            ticker_details = TickerBase.objects.all()
             
-            if process_ohlc_data:
+            for ticker in ticker_details:
+                from_date = (datetime.now() - timedelta(days=31)).strftime("%d/%m/%Y")
+                to_date = datetime.now().strftime("%d/%m/%Y")
+                symbol = format_symbol(ticker.ticker_symbol)
+                resolution = "D"
+                client_id = "MMKQTWNJH3-100"
+                access_token = get_access_token()
+                
+                # Fetch OHLC data
+                ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
+                
+                # Process OHLC data
+                processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
+                
+                # Calculate changes
                 latest_close, daily_change, weekly_change = calculate_changes(processed_daily_ohlc)
                 previous_day_open = processed_daily_ohlc.iloc[-2]['open']
                 previous_day_high = processed_daily_ohlc.iloc[-2]['high']
@@ -119,41 +124,42 @@ def generate_event_stream():
                 latest_open = processed_daily_ohlc.iloc[-1]['open']
                 latest_high = processed_daily_ohlc.iloc[-1]['high']
                 latest_low = processed_daily_ohlc.iloc[-1]['low']
-            ticker_data = {
-                "name": ticker.ticker_name,
-                "symbol": ticker.ticker_symbol,
-                "sector": ticker.ticker_sector,
-                "sub_sector": ticker.ticker_sub_sector,
-                "market_cap": ticker.ticker_market_cap,
-                "ltp": latest_close,
-                "daily_change": daily_change,
-                "weekly_change": weekly_change,
-                "previous_day_open": previous_day_open,
-                "previous_day_high": previous_day_high,
-                "previous_day_low": previous_day_low,
-                "previous_day_close": previous_day_close,
-                "latest_open": latest_open,
-                "latest_high": latest_high,
-                "latest_low": latest_low,
-            }
-            
-            ticker_list.append(ticker_data)
+                
+                # Prepare ticker data dictionary
+                ticker_data = {
+                    "name": ticker.ticker_name,
+                    "symbol": ticker.ticker_symbol,
+                    "sector": ticker.ticker_sector,
+                    "sub_sector": ticker.ticker_sub_sector,
+                    "market_cap": ticker.ticker_market_cap,
+                    "ltp": latest_close,
+                    "daily_change": daily_change,
+                    "weekly_change": weekly_change,
+                    "previous_day_open": previous_day_open,
+                    "previous_day_high": previous_day_high,
+                    "previous_day_low": previous_day_low,
+                    "previous_day_close": previous_day_close,
+                    "latest_open": latest_open,
+                    "latest_high": latest_high,
+                    "latest_low": latest_low,
+                }
+                
+                ticker_list.append(ticker_data)
         
+        except Exception as e:
+            # Handle exceptions, e.g., log the error or handle differently based on your application's needs
+            print(f"Exception occurred: {str(e)}")
+        
+        # Yield the data if available, or indicate no data
         if ticker_list:
             yield f"data: {json.dumps(ticker_list)}\n\n"
         else:
             yield f"data: No data available\n\n"
         
+        # Sleep for 20 seconds before fetching data again
         time.sleep(20)
-
 
 def sse_event_view(request):
     response = StreamingHttpResponse(generate_event_stream(), content_type='text/event-stream')
     response['Cache-Control'] = 'no-cache'
     return response
-
-
-
-
-
-

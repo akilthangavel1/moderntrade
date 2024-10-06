@@ -637,7 +637,7 @@
     </table>
 
     <script>
-        const eventSource = new EventSource('/events/');
+        const eventSource = new EventSource('/event-stream/');
 
         eventSource.onmessage = function(event) {
             const data = event.data;

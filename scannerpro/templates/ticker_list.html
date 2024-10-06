@@ -72,7 +72,7 @@
 <body>
     <div class="container">
         <h2>Tickers</h2>
-        <a href="{% url 'ticker_create' %}">
+        <a href="{% url 'create_ticker' %}">
             <button>Add New Ticker</button>
         </a>
         {% if tickers %}
@@ -96,8 +96,8 @@
                     <td>{{ ticker.ticker_sub_sector }}</td>
                     <td>{{ ticker.ticker_market_cap }}</td>
                     <td class="actions">
-                        <a href="{% url 'ticker_update' ticker.pk %}">Update</a>
-                        <a href="{% url 'ticker_delete' ticker.pk %}">Delete</a>
+                        <a href="{% url 'update_ticker' ticker.pk %}">Update</a>
+                        <a href="{% url 'delete_ticker' ticker.pk %}">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}

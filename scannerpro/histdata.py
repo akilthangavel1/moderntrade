@@ -44,6 +44,27 @@ def process_ohlc_data(response):
 
 import pandas as pd
 
+
+
+def find_last_friday(df):
+    # print(df)
+    if 'datetime' not in df.columns:
+        raise ValueError("DataFrame must contain a 'date' column")
+    
+    df['datetime'] = pd.to_datetime(df['datetime'])
+    
+    # # Filter the rows where the day is Friday (Friday is 4 in pandas' weekday system)
+    friday_df = df[df['datetime'].dt.weekday == 4]
+    # # If there are no Fridays in the data, return None
+    if friday_df.empty:
+        return None
+    
+    # # Sort by date and get the last (most recent) Friday
+    last_friday = friday_df.sort_values(by='datetime', ascending=False).iloc[0]
+    
+    return last_friday
+
+
 def calculate_changes(df):
     if not isinstance(df, pd.DataFrame) or df.empty or df.shape[0] < 2:
         return None, None, None
@@ -52,8 +73,11 @@ def calculate_changes(df):
     daily_change = latest_close - df.iloc[-2]['close']
     
     if df.shape[0] >= 6:
-        weekly_change = latest_close - df.iloc[-6]['close']
+        last_friday_close = (find_last_friday(df)['close'])
+        weekly_change = latest_close - last_friday_close   
     else:
         weekly_change = None  
     
     return latest_close, daily_change, weekly_change
+
+

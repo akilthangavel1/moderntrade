@@ -1,17 +1,12 @@
 from django.urls import path
 from . import views
 
-
 urlpatterns = [
-    path('', views.homepage, name="homepage"),
-    path('scanner/', views.scannerhome, name="scannerhome"),
-    path('tickerlist/', views.ticker_list, name='ticker_list'),
-    path('create/', views.ticker_create, name='ticker_create'),
-    path('update/<int:pk>/', views.ticker_update, name='ticker_update'),
-    path('delete/<int:pk>/', views.ticker_delete, name='ticker_delete'),
-    path('events/', views.sse_view, name='sse_view'),
-   
+    path('', views.show_homepage, name='homepage'),
+    path('scanner/', views.fetch_tickers_for_scanner, name='scanner_home'),
+    path('ticker/create/', views.create_ticker, name='create_ticker'),
+    path('ticker/<int:pk>/update/', views.update_ticker, name='update_ticker'),
+    path('ticker/<int:pk>/delete/', views.delete_ticker, name='delete_ticker'),
+    path('tickers/', views.list_tickers, name='list_tickers'),
+    path('event-stream/', views.sse_event_view, name='event_stream'),
 ]
-
-
-

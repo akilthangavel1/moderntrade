@@ -81,3 +81,69 @@ def calculate_changes(df):
     return latest_close, daily_change, weekly_change
 
 
+
+import pandas as pd
+
+def calculate_weekly_ohlc(df):
+    print(type(df))
+    # Debugging step: check the type of df
+    if not isinstance(df, pd.DataFrame):
+        raise ValueError(f"Expected a DataFrame, but got {type(df)} instead.")
+
+    # Ensure the DataFrame has the required 'datetime' column
+    if 'datetime' not in df.columns:
+        raise ValueError("DataFrame must contain a 'datetime' column")
+
+    # Convert the 'datetime' column to pandas datetime format
+    df['datetime'] = pd.to_datetime(df['datetime'])
+    
+    # Set the 'datetime' as the index for resampling by week
+    df.set_index('datetime', inplace=True)
+
+    # Resample the data by week ('W' sets Sunday as the end of the week, can be modified)
+    weekly_df = df.resample('W').agg({
+        'open': 'first',     # First open price of the week
+        'high': 'max',       # Maximum high price of the week
+        'low': 'min',        # Minimum low price of the week
+        'close': 'last',     # Last close price of the week
+        'volume': 'sum'      # Sum of the volume for the week
+    }).dropna()  # Drop any weeks where there's missing data (optional)
+
+    # Reset the index to move 'datetime' back to a column
+    weekly_df.reset_index(inplace=True)
+
+    return weekly_df
+
+
+
+
+
+
+def test_week_data(df):
+    # print(type(df))
+    if not isinstance(df, pd.DataFrame):
+        raise ValueError(f"Expected a DataFrame, but got {type(df)} instead.")
+
+    # Ensure the DataFrame has the required 'datetime' column
+    if 'datetime' not in df.columns:
+        raise ValueError("DataFrame must contain a 'datetime' column")
+
+    # Convert the 'datetime' column to pandas datetime format
+    df['datetime'] = pd.to_datetime(df['datetime'])
+    
+    # Set the 'datetime' as the index for resampling by week
+    df.set_index('datetime', inplace=True)
+
+    # Resample the data by week ('W' sets Sunday as the end of the week, can be modified)
+    weekly_df = df.resample('W').agg({
+        'open': 'first',     # First open price of the week
+        'high': 'max',       # Maximum high price of the week
+        'low': 'min',        # Minimum low price of the week
+        'close': 'last',     # Last close price of the week
+        'volume': 'sum'      # Sum of the volume for the week
+    }).dropna()  # Drop any weeks where there's missing data (optional)
+
+    # Reset the index to move 'datetime' back to a column
+    weekly_df.reset_index(inplace=True)
+
+    return weekly_df

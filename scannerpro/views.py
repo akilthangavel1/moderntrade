@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import StreamingHttpResponse
 
 from .models import TickerBase, AccessToken
-from .histdata import fetch_ohlc_data, process_ohlc_data, calculate_changes
+from .histdata import fetch_ohlc_data, process_ohlc_data, calculate_changes, calculate_weekly_ohlc, test_week_data
 
 from datetime import datetime, timedelta
 import pandas as pd
@@ -11,6 +11,7 @@ import numpy as np
 import yfinance as yf
 import json
 import time
+
 
 
 
@@ -108,43 +109,41 @@ def generate_event_stream():
                 resolution = "D"
                 client_id = "MMKQTWNJH3-100"
                 access_token = get_access_token()
-                
-                # Fetch OHLC data
                 ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
-                
-                # Process OHLC data
                 processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
-                
+                weekly_df = test_week_data(processed_daily_ohlc)
+                print(weekly_df)
+                # calculate_weekly_ohlc(process_ohlc_data)                                                                                                                                                                                                                                                                                
                 # Calculate changes
-                latest_close, daily_change, weekly_change = calculate_changes(processed_daily_ohlc)
-                previous_day_open = processed_daily_ohlc.iloc[-2]['open']
-                previous_day_high = processed_daily_ohlc.iloc[-2]['high']
-                previous_day_low = processed_daily_ohlc.iloc[-2]['low']
-                previous_day_close = processed_daily_ohlc.iloc[-2]['close']
-                latest_open = processed_daily_ohlc.iloc[-1]['open']
-                latest_high = processed_daily_ohlc.iloc[-1]['high']
-                latest_low = processed_daily_ohlc.iloc[-1]['low']
+        #         latest_close, daily_change, weekly_change = calculate_changes(processed_daily_ohlc)
+        #         previous_day_open = processed_daily_ohlc.iloc[-2]['open']
+        #         previous_day_high = processed_daily_ohlc.iloc[-2]['high']
+        #         previous_day_low = processed_daily_ohlc.iloc[-2]['low']
+        #         previous_day_close = processed_daily_ohlc.iloc[-2]['close']
+        #         latest_open = processed_daily_ohlc.iloc[-1]['open']
+        #         latest_high = processed_daily_ohlc.iloc[-1]['high']
+        #         latest_low = processed_daily_ohlc.iloc[-1]['low']
                 
-                # Prepare ticker data dictionary
-                ticker_data = {
-                    "name": ticker.ticker_name,
-                    "symbol": ticker.ticker_symbol,
-                    "sector": ticker.ticker_sector,
-                    "sub_sector": ticker.ticker_sub_sector,
-                    "market_cap": ticker.ticker_market_cap,
-                    "ltp": latest_close,
-                    "daily_change": daily_change,
-                    "weekly_change": weekly_change,
-                    "previous_day_open": previous_day_open,
-                    "previous_day_high": previous_day_high,
-                    "previous_day_low": previous_day_low,
-                    "previous_day_close": previous_day_close,
-                    "latest_open": latest_open,
-                    "latest_high": latest_high,
-                    "latest_low": latest_low,
-                }
+        #         # Prepare ticker data dictionary
+        #         ticker_data = {
+        #             "name": ticker.ticker_name,
+        #             "symbol": ticker.ticker_symbol,
+        #             "sector": ticker.ticker_sector,
+        #             "sub_sector": ticker.ticker_sub_sector,
+        #             "market_cap": ticker.ticker_market_cap,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+        #             "ltp": latest_close,
+        #             "daily_change": daily_change,
+        #             "weekly_change": weekly_change,
+        #             "previous_day_open": previous_day_open,
+        #             "previous_day_high": previous_day_high,
+        #             "previous_day_low": previous_day_low,
+        #             "previous_day_close": previous_day_close,
+        #             "latest_open": latest_open,
+        #             "latest_high": latest_high,
+        #             "latest_low": latest_low,
+        #         }
                 
-                ticker_list.append(ticker_data)
+        #         ticker_list.append(ticker_data)
         
         except Exception as e:
             # Handle exceptions, e.g., log the error or handle differently based on your application's needs

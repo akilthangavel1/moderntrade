@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Stock Data</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #data { white-space: pre-wrap; font-size: 1.2em; }
+        .data-container { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Real-Time Stock Data</h1>
+    <div id="data" class="data-container">Waiting for data...</div>
+
+    <script>
+        // Initialize WebSocket connection
+        const socket = new WebSocket('ws://' + window.location.host + '/ws/stock-data/');
+
+        // Function to handle incoming messages
+        socket.onmessage = function(event) {
+            const stockData = JSON.parse(event.data);
+            // console.log(stockData);  
+            // Format data into a readable HTML format
+            let displayText = stockData.map(item => 
+                `ID: ${item.id} | Symbol: ${item.ticker_name} | Price: ${item.price} | Updated: ${item.updated_at}`
+            ).join('\n');
+
+            // Display formatted data in the data div
+            document.getElementById('data').textContent = displayText;
+        };
+
+        // Handle connection closure
+        socket.onclose = function(event) {
+            document.getElementById('data').textContent = 'WebSocket closed unexpectedly';
+        };
+    </script>
+</body>
+</html>

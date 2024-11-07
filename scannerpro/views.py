@@ -1,16 +1,19 @@
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import StreamingHttpResponse
-
+from django.http import HttpResponse
+from django.apps import apps
 from .models import TickerBase, AccessToken
 from .histdata import fetch_ohlc_data, process_ohlc_data, calculate_changes, calculate_weekly_ohlc, test_week_data
-
+from django.apps import apps
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
 import yfinance as yf
 import json
 import time
+from django.db import connection
+from datetime import date
 
 
 
@@ -25,6 +28,8 @@ def fetch_tickers_for_scanner(request):
 def show_homepage(request):
     return render(request, "homepage.html", {})
 
+def dummy_homepage(request):
+    return render(request, "dummypage.html", {})
 
 def create_ticker(request):
     if request.method == 'POST':
@@ -93,10 +98,13 @@ def get_access_token():
 
 
 def format_symbol(symbol):
-    return "NSE:" + symbol + "24OCTFUT"
+    return "NSE:" + symbol + "24NOVFUT"
 
 
-def generate_event_stream():
+import asyncio
+
+# Modify this function to be asynchronous
+async def generate_event_stream():
     while True:
         ticker_list = []
         try:
@@ -113,40 +121,11 @@ def generate_event_stream():
                 processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
                 weekly_df = test_week_data(processed_daily_ohlc)
                 print(weekly_df)
-                # calculate_weekly_ohlc(process_ohlc_data)                                                                                                                                                                                                                                                                                
-                # Calculate changes
-        #         latest_close, daily_change, weekly_change = calculate_changes(processed_daily_ohlc)
-        #         previous_day_open = processed_daily_ohlc.iloc[-2]['open']
-        #         previous_day_high = processed_daily_ohlc.iloc[-2]['high']
-        #         previous_day_low = processed_daily_ohlc.iloc[-2]['low']
-        #         previous_day_close = processed_daily_ohlc.iloc[-2]['close']
-        #         latest_open = processed_daily_ohlc.iloc[-1]['open']
-        #         latest_high = processed_daily_ohlc.iloc[-1]['high']
-        #         latest_low = processed_daily_ohlc.iloc[-1]['low']
-                
-        #         # Prepare ticker data dictionary
-        #         ticker_data = {
-        #             "name": ticker.ticker_name,
-        #             "symbol": ticker.ticker_symbol,
-        #             "sector": ticker.ticker_sector,
-        #             "sub_sector": ticker.ticker_sub_sector,
-        #             "market_cap": ticker.ticker_market_cap,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-        #             "ltp": latest_close,
-        #             "daily_change": daily_change,
-        #             "weekly_change": weekly_change,
-        #             "previous_day_open": previous_day_open,
-        #             "previous_day_high": previous_day_high,
-        #             "previous_day_low": previous_day_low,
-        #             "previous_day_close": previous_day_close,
-        #             "latest_open": latest_open,
-        #             "latest_high": latest_high,
-        #             "latest_low": latest_low,
-        #         }
-                
-        #         ticker_list.append(ticker_data)
-        
+                # Uncomment and process as needed
+                # latest_close, daily_change, weekly_change = calculate_changes(processed_daily_ohlc)
+                # Prepare ticker data dictionary and append to ticker_list here
+
         except Exception as e:
-            # Handle exceptions, e.g., log the error or handle differently based on your application's needs
             print(f"Exception occurred: {str(e)}")
         
         # Yield the data if available, or indicate no data
@@ -155,10 +134,142 @@ def generate_event_stream():
         else:
             yield f"data: No data available\n\n"
         
-        # Sleep for 20 seconds before fetching data again
-        time.sleep(20)
+        # Use asyncio.sleep to avoid blocking
+        await asyncio.sleep(20)
 
-def sse_event_view(request):
+# Convert sse_event_view to async to handle async generator
+async def sse_event_view(request):
     response = StreamingHttpResponse(generate_event_stream(), content_type='text/event-stream')
     response['Cache-Control'] = 'no-cache'
     return response
+
+
+
+def insert_data_into_ticker_table(ticker_symbol, datetime_value, open_price, high_price, low_price, close_price, volume):
+    table_name = ticker_symbol.lower()
+
+    insert_query = f"""
+    INSERT INTO "{table_name}" (datetime, open_price, high_price, low_price, close_price, volume)
+    VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(insert_query, [datetime_value, open_price, high_price, low_price, close_price, volume])
+            print(f"Data inserted successfully into {table_name} table.")
+    except Exception as e:
+        print(f"Error inserting data into {table_name} table: {e}")
+
+
+
+# def histdata_update_db(request):
+#     ticker_details = TickerBase.objects.all()
+#     for ticker in ticker_details:
+#         print(ticker.ticker_symbol)
+#         from_date = (datetime.now() - timedelta(days=28)).strftime("%d/%m/%Y")
+#         to_date = datetime.now().strftime("%d/%m/%Y")
+#         symbol = format_symbol(ticker.ticker_symbol)
+#         resolution = "D"
+#         client_id = "MMKQTWNJH3-100"
+#         access_token = get_access_token()
+#         ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
+#         processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
+#         print(processed_daily_ohlc)
+#         for index, row in processed_daily_ohlc.iterrows():
+#             print(row.datetime, row.open)
+#             insert_data_into_ticker_table(
+#                 ticker_symbol=ticker.ticker_symbol, 
+#                 datetime_value=datetime(2024, 11, 6, 10, 30),  # Example datetime
+#                 open_price=row.open, 
+#                 high_price=row.high, 
+#                 low_price=row.low, 
+#                 close_price=row.close, 
+#                 volume=row.volume
+#             )
+#     return HttpResponse("Data Inserted")
+
+
+
+
+def data_exists(ticker_symbol, datetime_value):
+    try:
+        table_name = ticker_symbol.lower()
+        query = f"SELECT EXISTS(SELECT 1 FROM {table_name} WHERE datetime = %s)"
+        with connection.cursor() as cursor:
+            cursor.execute(query, [datetime_value])
+            return bool(cursor.fetchone()[0])
+    except Exception as e:
+        print("An error occurred:", e)
+        return False
+    
+
+def histdata_update_db(request):
+    ticker_details = TickerBase.objects.all()
+    for ticker in ticker_details:
+        try:
+            print(f"Processing ticker: {ticker.ticker_symbol}")
+            from_date = (datetime.now() - timedelta(days=28)).strftime("%d/%m/%Y")
+            to_date = (datetime.now() - timedelta(days=1)).strftime("%d/%m/%Y")
+            symbol = format_symbol(ticker.ticker_symbol)
+            resolution = "1"
+            client_id = "MMKQTWNJH3-100"
+            access_token = get_access_token()
+            ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
+            print(ohlc_daily_data)
+            processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
+            print(processed_daily_ohlc)
+            for _, row in processed_daily_ohlc.iterrows():
+                if not data_exists(ticker.ticker_symbol, row.datetime):
+                    print(row.datetime)
+                    insert_data_into_ticker_table(
+                        ticker_symbol=ticker.ticker_symbol, 
+                        datetime_value=row.datetime,
+                        open_price=row.open, 
+                        high_price=row.high, 
+                        low_price=row.low, 
+                        close_price=row.close, 
+                        volume=row.volume   
+                    )
+                    print(f"Inserted data for {ticker.ticker_symbol} on {row.datetime}.")
+                else:
+                    print(f"Data for {ticker.ticker_symbol} on {row.datetime} already exists. Skipping.")
+        
+        except Exception as e:
+            print(f"Error processing ticker {ticker.ticker_symbol}: {e}")
+    
+    return HttpResponse("Data Inserted")
+
+
+
+
+
+
+
+from django.http import JsonResponse
+def get_ticker_data(request):
+    ticker_symbol = request.GET.get('ticker_symbol')
+    if not ticker_symbol:
+        return JsonResponse({'error': 'Ticker symbol not provided'}, status=400)
+    
+    table_name = ticker_symbol.lower()
+    query = f"SELECT * FROM {table_name} ORDER BY datetime DESC LIMIT 100"
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            ticker_data = [dict(zip(columns, row)) for row in rows]
+            return JsonResponse(ticker_data, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def fetch_tickers_for_scanner(request):
+    tickers = TickerBase.objects.all().values('ticker_symbol', 'ticker_name')
+    tickers_list = list(tickers)  # Convert queryset to list
+    return JsonResponse(tickers_list, safe=False)  # Return as JSON
+
+
+def api_home(request):
+    return render(request, 'dummy2.html', {})

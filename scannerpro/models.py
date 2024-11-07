@@ -1,4 +1,6 @@
-from django.db import models
+from django.db import models, connection
+import re
+from django.core.exceptions import ValidationError
 
 class TickerBase(models.Model):
     # Constants for market cap choices
@@ -71,6 +73,45 @@ class TickerBase(models.Model):
 
     def __str__(self):
         return f"{self.ticker_symbol} ({self.ticker_sector}) - {self.ticker_market_cap}"
+
+    def save(self, *args, **kwargs):
+        # Validate ticker symbol for table names
+        if not re.match(r'^[a-zA-Z0-9_]+$', self.ticker_symbol):
+            raise ValidationError("Ticker symbol contains invalid characters.")
+
+        # Call the original save method to insert the TickerBase record
+        super().save(*args, **kwargs)
+
+        # Get the table name using ticker_symbol in lowercase
+        table_name = self.ticker_symbol.lower()
+        wc_table_name = f"{table_name}_wc"
+
+        # SQL query to create the main table
+        create_main_table_query = f"""
+        CREATE TABLE IF NOT EXISTS "{table_name}" (
+            id SERIAL PRIMARY KEY,
+            datetime TIMESTAMPTZ NOT NULL,
+            open_price FLOAT NOT NULL,
+            high_price FLOAT NOT NULL,
+            low_price FLOAT NOT NULL,
+            close_price FLOAT NOT NULL,
+            volume BIGINT
+        )
+        """
+
+        # SQL query to create the WebSocket data table
+        create_wc_table_query = f"""
+        CREATE TABLE IF NOT EXISTS "{wc_table_name}" (
+            id SERIAL PRIMARY KEY,
+            timestamp TIMESTAMPTZ NOT NULL,
+            ltp FLOAT NOT NULL
+        )
+        """
+
+        # Execute the queries to create both tables
+        with connection.cursor() as cursor:
+            cursor.execute(create_main_table_query)
+            cursor.execute(create_wc_table_query)
 
 
 # models.py in your Django app (e.g., scannerpro/models.py)

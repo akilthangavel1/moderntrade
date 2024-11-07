@@ -1,16 +1,16 @@
-"""
-ASGI config for moderntrade project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.0/howto/deployment/asgi/
-"""
-
 import os
-
 from django.core.asgi import get_asgi_application
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+import scannerpro.routing  # Update with the app name
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'moderntrade.settings')
 
-application = get_asgi_application()
+application = ProtocolTypeRouter({
+    "http": get_asgi_application(),
+    "websocket": AuthMiddlewareStack(
+        URLRouter(
+            scannerpro.routing.websocket_urlpatterns  # Update with the app name
+        )
+    ),
+})

@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'scannerpro',
 ]
 
@@ -74,14 +75,22 @@ WSGI_APPLICATION = 'moderntrade.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myproject',
-        'USER': 'myprojectuser',
-        'PASSWORD': 'password',
+        'NAME': 'tradedb',
+        'USER': 'akil',
+        'PASSWORD': 'Akil@2007',
         'HOST': 'localhost',
         'PORT': '',
     }
 }
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],  # Ensure Redis is running on this host/port
+        },
+    },
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -121,4 +130,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
+
+ASGI_APPLICATION = 'moderntrade.asgi.application'
 

@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'scannerpro',
+    'django_celery_results', 
 ]
 
 MIDDLEWARE = [

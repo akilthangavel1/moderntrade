@@ -52,7 +52,6 @@ def find_last_friday(df):
         raise ValueError("DataFrame must contain a 'date' column")
     
     df['datetime'] = pd.to_datetime(df['datetime'])
-    
     # # Filter the rows where the day is Friday (Friday is 4 in pandas' weekday system)
     friday_df = df[df['datetime'].dt.weekday == 4]
     # # If there are no Fridays in the data, return None
@@ -85,7 +84,6 @@ def calculate_changes(df):
 import pandas as pd
 
 def calculate_weekly_ohlc(df):
-    print(type(df))
     # Debugging step: check the type of df
     if not isinstance(df, pd.DataFrame):
         raise ValueError(f"Expected a DataFrame, but got {type(df)} instead.")

@@ -1,0 +1,8 @@
+{"level":"ERROR","location":"[access_token_to_hsmtoken:287] data_ws","message":{"type":"cn","code":-300,"message":"Please provide valid token","s":"error"},"timestamp":"2024-11-07 08:58:13,112+0000","service":"FyersDataSocket"}
+{"level":"ERROR","location":"[access_token_to_hsmtoken:287] data_ws","message":{"type":"cn","code":-300,"message":"Please provide valid token","s":"error"},"timestamp":"2024-11-07 08:58:37,034+0000","service":"FyersDataSocket"}
+{"level":"ERROR","location":"[access_token_to_hsmtoken:287] data_ws","message":{"type":"cn","code":-300,"message":"Please provide valid token","s":"error"},"timestamp":"2024-11-07 09:00:24,392+0000","service":"FyersDataSocket"}
+{"level":"ERROR","location":"[access_token_to_hsmtoken:287] data_ws","message":{"type":"cn","code":-300,"message":"Please provide valid token","s":"error"},"timestamp":"2024-11-07 09:01:21,912+0000","service":"FyersDataSocket"}
+{"level":"ERROR","location":"[access_token_to_hsmtoken:287] data_ws","message":{"type":"cn","code":-300,"message":"Please provide valid token","s":"error"},"timestamp":"2024-11-07 09:03:01,925+0000","service":"FyersDataSocket"}
+{"level":"ERROR","location":"[<lambda>:1663] data_ws","message":"Connection to remote host was lost.","timestamp":"2024-11-07 10:34:23,617+0000","service":"FyersDataSocket"}
+{"level":"ERROR","location":"[<lambda>:1663] data_ws","message":"Connection to remote host was lost.","timestamp":"2024-11-07 11:40:07,294+0000","service":"FyersDataSocket"}
+{"level":"ERROR","location":"[access_token_to_hsmtoken:272] data_ws","message":{"type":"cn","code":-99,"message":"Token is expired","s":"error"},"timestamp":"2024-11-08 06:10:24,286+0000","service":"FyersDataSocket"}

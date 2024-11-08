@@ -102,46 +102,170 @@ def format_symbol(symbol):
 
 
 import asyncio
+def get_ticker_data(request):
+    ticker_symbol = request.GET.get('ticker_symbol')
+    if not ticker_symbol:
+        return JsonResponse({'error': 'Ticker symbol not provided'}, status=400)
+    
+    table_name = ticker_symbol.lower()
+    query = f"SELECT * FROM {table_name} ORDER BY datetime DESC LIMIT 100"
 
-# Modify this function to be asynchronous
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            ticker_data = [dict(zip(columns, row)) for row in rows]
+            return JsonResponse(ticker_data, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def get_hist_data_raw(ticker_symbol):
+    if not ticker_symbol:
+        return JsonResponse({'error': 'Ticker symbol not provided'}, status=400)
+    
+    table_name = ticker_symbol.lower()
+    query = f"SELECT * FROM {table_name}"
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            ticker_data = [dict(zip(columns, row)) for row in rows]
+            return ticker_data
+            # return JsonResponse(ticker_data, safe=False)
+    except Exception as e:
+        return None
+    
+
+def get_ticker_data_raw(ticker_symbol):
+    if not ticker_symbol:
+        return JsonResponse({'error': 'Ticker symbol not provided'}, status=400)
+    
+    table_name = ticker_symbol.lower() + "_wc"
+    query = f"SELECT * FROM {table_name}"
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            ticker_data = [dict(zip(columns, row)) for row in rows]
+            return ticker_data
+            # return JsonResponse(ticker_data, safe=False)
+    except Exception as e:
+        print(e)
+        return None
+
+import asyncio
+import pandas as pd
+from django.http import StreamingHttpResponse
+from asgiref.sync import sync_to_async
+
+@sync_to_async
+def get_tickers():
+    return list(TickerBase.objects.all())
+
+@sync_to_async
+def get_hist_data(symbol):
+    return get_hist_data_raw(symbol)
+
+@sync_to_async
+def get_tick_data(symbol):
+    return get_ticker_data_raw(symbol)
+
 async def generate_event_stream():
     while True:
-        ticker_list = []
         try:
-            ticker_details = TickerBase.objects.all()
-            
-            for ticker in ticker_details:
-                from_date = (datetime.now() - timedelta(days=31)).strftime("%d/%m/%Y")
-                to_date = datetime.now().strftime("%d/%m/%Y")
-                symbol = format_symbol(ticker.ticker_symbol)
-                resolution = "D"
-                client_id = "MMKQTWNJH3-100"
-                access_token = get_access_token()
-                ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
-                processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
-                weekly_df = test_week_data(processed_daily_ohlc)
-                print(weekly_df)
-                # Uncomment and process as needed
-                # latest_close, daily_change, weekly_change = calculate_changes(processed_daily_ohlc)
-                # Prepare ticker data dictionary and append to ticker_list here
+            tickers = await get_tickers()  # Use async call to retrieve tickers
+            ticker_list = []
+            for ticker in tickers:
+                try:
+                    hist_data = await get_hist_data(ticker.ticker_symbol)
+                    tick_data = await get_tick_data(ticker.ticker_symbol)
+                    hist_df = pd.DataFrame(hist_data).drop('id', axis=1)
+                    hist_df.rename(columns={
+                        'open_price': 'open',
+                        'high_price': 'high',
+                        'low_price': 'low',
+                        'close_price': 'close'
+                    }, inplace=True)
+                    hist_df.set_index('datetime', inplace=True)
 
+                    tick_data = await get_tick_data(ticker.ticker_symbol)  # Use the async version to get tick data
+                    tick_df = pd.DataFrame(tick_data)
+                    tick_df['timestamp'] = tick_df['timestamp'].dt.floor('min')
+                    tick_ohlc_df = tick_df.groupby('timestamp').agg(
+                        open=('ltp', 'first'),
+                        high=('ltp', 'max'),
+                        low=('ltp', 'min'),
+                        close=('ltp', 'last')
+                    ).reset_index()
+                    tick_ohlc_df['volume'] = 0
+                    tick_ohlc_df.set_index('timestamp', inplace=True)
+                    tick_ohlc_df.index.name = 'datetime'
+
+                    hist_df.reset_index(inplace=True)
+                    tick_ohlc_df.reset_index(inplace=True)
+                    df = pd.concat([hist_df, tick_ohlc_df], ignore_index=True)
+                    df['datetime'] = pd.to_datetime(df['datetime'])
+                    df.set_index('datetime', inplace=True)
+
+                    # Resample to daily timeframe
+                    daily_df = df.resample('D').agg({
+                        'open': 'first',
+                        'high': 'max',
+                        'low': 'min',
+                        'close': 'last',
+                        'volume': 'sum'
+                    }).dropna()  # Drop days without data
+                    # Calculate changes
+                    daily_df = daily_df.reset_index()
+                    latest_close, daily_change, weekly_change = calculate_changes(daily_df)
+                    previous_day_open = daily_df.iloc[-2]['open']
+                    previous_day_high = daily_df.iloc[-2]['high']
+                    previous_day_low = daily_df.iloc[-2]['low']
+                    previous_day_close = daily_df.iloc[-2]['close']
+                    latest_open = daily_df.iloc[-1]['open']
+                    latest_high = daily_df.iloc[-1]['high']
+                    latest_low = daily_df.iloc[-1]['low']
+
+                    # Prepare ticker data dictionary
+                    ticker_data = {
+                        "name": ticker.ticker_name,
+                        "symbol": ticker.ticker_symbol,
+                        "sector": ticker.ticker_sector,
+                        "sub_sector": ticker.ticker_sub_sector,
+                        "market_cap": ticker.ticker_market_cap,
+                        "ltp": latest_close,
+                        "daily_change": daily_change,
+                        "weekly_change": weekly_change,
+                        "previous_day_open": previous_day_open,
+                        "previous_day_high": previous_day_high,
+                        "previous_day_low": previous_day_low,
+                        "previous_day_close": previous_day_close,
+                        "latest_open": latest_open,
+                        "latest_high": latest_high,
+                        "latest_low": latest_low,
+                    }
+
+                    ticker_list.append(ticker_data)
+                except Exception as e:
+                    print(f"Error processing {ticker.ticker_symbol}: {str(e)}")
+
+            yield f"data: {json.dumps(ticker_list)}\n\n"
         except Exception as e:
             print(f"Exception occurred: {str(e)}")
-        
-        # Yield the data if available, or indicate no data
-        if ticker_list:
-            yield f"data: {json.dumps(ticker_list)}\n\n"
-        else:
-            yield f"data: No data available\n\n"
-        
-        # Use asyncio.sleep to avoid blocking
-        await asyncio.sleep(20)
+            yield f"data: Exception occurred: {str(e)}\n\n"
+        await asyncio.sleep(1)  # Pause before the next cycle
 
-# Convert sse_event_view to async to handle async generator
+
 async def sse_event_view(request):
     response = StreamingHttpResponse(generate_event_stream(), content_type='text/event-stream')
     response['Cache-Control'] = 'no-cache'
     return response
+
 
 
 
@@ -161,32 +285,6 @@ def insert_data_into_ticker_table(ticker_symbol, datetime_value, open_price, hig
         print(f"Error inserting data into {table_name} table: {e}")
 
 
-
-# def histdata_update_db(request):
-#     ticker_details = TickerBase.objects.all()
-#     for ticker in ticker_details:
-#         print(ticker.ticker_symbol)
-#         from_date = (datetime.now() - timedelta(days=28)).strftime("%d/%m/%Y")
-#         to_date = datetime.now().strftime("%d/%m/%Y")
-#         symbol = format_symbol(ticker.ticker_symbol)
-#         resolution = "D"
-#         client_id = "MMKQTWNJH3-100"
-#         access_token = get_access_token()
-#         ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
-#         processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
-#         print(processed_daily_ohlc)
-#         for index, row in processed_daily_ohlc.iterrows():
-#             print(row.datetime, row.open)
-#             insert_data_into_ticker_table(
-#                 ticker_symbol=ticker.ticker_symbol, 
-#                 datetime_value=datetime(2024, 11, 6, 10, 30),  # Example datetime
-#                 open_price=row.open, 
-#                 high_price=row.high, 
-#                 low_price=row.low, 
-#                 close_price=row.close, 
-#                 volume=row.volume
-#             )
-#     return HttpResponse("Data Inserted")
 
 
 
@@ -246,6 +344,7 @@ def histdata_update_db(request):
 
 
 from django.http import JsonResponse
+
 def get_ticker_data(request):
     ticker_symbol = request.GET.get('ticker_symbol')
     if not ticker_symbol:

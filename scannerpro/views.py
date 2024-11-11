@@ -184,6 +184,7 @@ async def generate_event_stream():
                 try:
                     hist_data = await get_hist_data(ticker.ticker_symbol)
                     tick_data = await get_tick_data(ticker.ticker_symbol)
+                    
                     hist_df = pd.DataFrame(hist_data).drop('id', axis=1)
                     hist_df.rename(columns={
                         'open_price': 'open',
@@ -192,9 +193,10 @@ async def generate_event_stream():
                         'close_price': 'close'
                     }, inplace=True)
                     hist_df.set_index('datetime', inplace=True)
-
+                    
                     tick_data = await get_tick_data(ticker.ticker_symbol)  # Use the async version to get tick data
                     tick_df = pd.DataFrame(tick_data)
+
                     tick_df['timestamp'] = tick_df['timestamp'].dt.floor('min')
                     tick_ohlc_df = tick_df.groupby('timestamp').agg(
                         open=('ltp', 'first'),
@@ -372,3 +374,6 @@ def fetch_tickers_for_scanner(request):
 
 def api_home(request):
     return render(request, 'dummy2.html', {})
+
+def dynamicscanner(request):
+    return render(request, 'index.html', {})

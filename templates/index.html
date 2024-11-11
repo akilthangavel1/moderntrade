@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{%  block content %}
+
+<!-- Content -->
+<div class="container mt-5">
+
+    <!-- Timeframe Selector -->
+    <div class="mt-4">
+        <label for="timeframeSelect" class="form-label">Select Timeframe:</label>
+        <select class="form-select" id="timeframeSelect" aria-label="Timeframe select">
+            <option value="1min">1 Minute</option>
+            <option value="5min">5 Minutes</option>
+            <option value="15min">15 Minutes</option>
+            <option value="1hr">1 Hour</option>
+            <option value="4hr">4 Hours</option>
+            <option value="1d">1 Day</option>
+            <option value="1w">1 Week</option>
+            <option value="1mo">1 Month</option>
+        </select>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Candle Data Table</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Current Candle High</th>
+                <th>Current Candle Low</th>
+                <th>Current Candle Close</th>
+                <th>Previous Candle Open</th>
+                <th>Previous Candle High</th>
+                <th>Previous Candle Low</th>
+                <th>Previous Candle Close</th>
+                <th>Current Candle ATP</th>
+                <th>Previous Candle ATP</th>
+                <th>Last 3 Candles ATP</th>
+                <th>Previous Swing High 1</th>
+                <th>Previous Swing High 2</th>
+                <th>Previous Swing High 3</th>
+                <th>Previous Swing Low 1</th>
+                <th>Previous Swing Low 2</th>
+                <th>Previous Swing Low 3</th>
+                <th>Bias (Positive/Negative for X Candles)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>150.50</td>
+                <td>149.00</td>
+                <td>150.00</td>
+                <td>148.75</td>
+                <td>151.00</td>
+                <td>147.50</td>
+                <td>149.50</td>
+                <td>149.75</td>
+                <td>148.75</td>
+                <td>149.30</td>
+                <td>152.00</td>
+                <td>153.50</td>
+                <td>154.00</td>
+                <td>145.00</td>
+                <td>144.50</td>
+                <td>144.00</td>
+                <td>Positive (3 candles)</td>
+            </tr>
+            <tr>
+                <td>151.20</td>
+                <td>149.80</td>
+                <td>150.80</td>
+                <td>149.90</td>
+                <td>152.30</td>
+                <td>148.60</td>
+                <td>150.10</td>
+                <td>150.40</td>
+                <td>149.20</td>
+                <td>149.80</td>
+                <td>153.00</td>
+                <td>153.20</td>
+                <td>153.50</td>
+                <td>146.00</td>
+                <td>145.50</td>
+                <td>145.00</td>
+                <td>Negative (5 candles)</td>
+            </tr>
+            <!-- Additional rows can be added similarly -->
+        </tbody>
+    </table>
+</div>
+{% endblock %}

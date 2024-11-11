@@ -22,6 +22,7 @@ def process_stock_data(message):
         # Parse and extract data from the message
         data = message
         symbol = data.get('symbol')
+        print
         ltp = data.get('ltp')
         last_traded_time = data.get('last_traded_time')
         if not symbol or not ltp:

@@ -23,14 +23,11 @@ class Command(BaseCommand):
             data_type = "SymbolUpdate"
             symbols = list(TickerBase.objects.values_list('ticker_symbol', flat=True))
             fyers_symbols = ["NSE:" + stock + "-EQ" for stock in symbols]
-            print(fyers_symbols)
             fyers.subscribe(symbols=fyers_symbols, data_type=data_type)
             fyers.keep_running()
 
         access_token = AccessToken.objects.get()  
-        print(type(access_token))
-        access_token = access_token.value  # Directly get the field value
-        print(access_token)
+        access_token = access_token.value 
         fyers = data_ws.FyersDataSocket(
             access_token=access_token,
             log_path="",

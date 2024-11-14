@@ -16,8 +16,8 @@ access_token = creds.access_token
 fyers = fyersModel.FyersModel(client_id=client_id, is_async=False, token=access_token, log_path="")
 
 # Dates for the request
-from_date = "13/08/2024"
-to_date = "15/08/2024"
+from_date = "14/10/2024"
+to_date = "12/11/2024"
 
 # Convert dates to Unix timestamps
 range_from = date_to_timestamp(from_date)

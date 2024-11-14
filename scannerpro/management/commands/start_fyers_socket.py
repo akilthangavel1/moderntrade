@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from fyers_apiv3.FyersWebsocket import data_ws
 from scannerpro.tasks import process_stock_data
 from scannerpro.models import TickerBase, AccessToken
+from scannerpro.views import format_symbol
 
 
 class Command(BaseCommand):
@@ -22,7 +23,7 @@ class Command(BaseCommand):
         def onopen():
             data_type = "SymbolUpdate"
             symbols = list(TickerBase.objects.values_list('ticker_symbol', flat=True))
-            fyers_symbols = ["NSE:" + stock + "-EQ" for stock in symbols]
+            fyers_symbols = [format_symbol(stock) for stock in symbols]
             fyers.subscribe(symbols=fyers_symbols, data_type=data_type)
             fyers.keep_running()
 

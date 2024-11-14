@@ -73,3 +73,8 @@
 #     }
 # }
     # <script src="https://kit.fontawesome.com/528c9fbb89.js" crossorigin="anonymous"></script>
+# ALTER ROLE akil SET client_encoding TO 'utf8';
+# ALTER ROLE akil SET default_transaction_isolation TO 'read committed';
+# ALTER ROLE akil SET timezone TO 'UTC';
+# GRANT ALL PRIVILEGES ON DATABASE tradenew TO akil;
+# ALTER DATABASE tradenew OWNER TO akil;

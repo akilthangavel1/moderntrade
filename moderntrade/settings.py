@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'moderntrade.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'tradedb',
+        'NAME': 'tradenew',
         'USER': 'akil',
         'PASSWORD': 'Akil@2007',
         'HOST': 'localhost',
@@ -134,3 +134,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ASGI_APPLICATION = 'moderntrade.asgi.application'
 
+# ALTER ROLE akil SET client_encoding TO 'utf8';
+# ALTER ROLE akil SET default_transaction_isolation TO 'read committed';
+# ALTER ROLE akil SET timezone TO 'UTC';
+# GRANT ALL PRIVILEGES ON DATABASE tradenew TO akil;
+# ALTER DATABASE tradenew OWNER TO akil;

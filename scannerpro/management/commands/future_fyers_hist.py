@@ -3,12 +3,12 @@ from datetime import datetime, timedelta
 from scannerpro.models import TickerBase
 import time
 from scannerpro.views import (
-    format_symbol,
+    future_format_symbol,
     get_access_token,
     fetch_ohlc_data,
     process_ohlc_data,
     data_exists,
-    insert_data_into_ticker_table
+    insert_data_into_historical_db
 )
 
 class Command(BaseCommand):
@@ -22,18 +22,20 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Processing ticker: {ticker.ticker_symbol}"))
                 from_date = (datetime.now() - timedelta(days=28)).strftime("%d/%m/%Y")
                 to_date = (datetime.now() - timedelta(days=1)).strftime("%d/%m/%Y")
-                symbol = format_symbol(ticker.ticker_symbol)
+                print(ticker.ticker_symbol)
+                symbol = future_format_symbol(ticker.ticker_symbol.upper())
                 resolution = "1"
                 client_id = "MMKQTWNJH3-100"
                 access_token = get_access_token()
-                time.sleep(5)
+                print(symbol)
                 ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
+                print(ohlc_daily_data)
                 processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
-                time.sleep(5)
+                time.sleep(1)
                 for _, row in processed_daily_ohlc.iterrows():
-                    if not data_exists(ticker.ticker_symbol, row.datetime):
-                        insert_data_into_ticker_table(
-                            ticker_symbol=ticker.ticker_symbol,
+                    if not data_exists(ticker.ticker_symbol + "_future_historical_data", row.datetime):
+                        insert_data_into_historical_db(
+                            table_name= ticker.ticker_symbol + "_future_historical_data",
                             datetime_value=row.datetime,
                             open_price=row.open,
                             high_price=row.high,

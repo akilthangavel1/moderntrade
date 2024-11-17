@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'scannerpro',
+    'django_celery_beat',
     'django_celery_results', 
 ]
 
@@ -76,7 +77,7 @@ WSGI_APPLICATION = 'moderntrade.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'tradenew',
+        'NAME': 'tradebubble',
         'USER': 'akil',
         'PASSWORD': 'Akil@2007',
         'HOST': 'localhost',
@@ -121,16 +122,18 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
+
 
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# settings.py
+
 
 ASGI_APPLICATION = 'moderntrade.asgi.application'
 
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'  

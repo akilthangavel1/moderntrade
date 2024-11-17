@@ -3,7 +3,6 @@ import re
 from django.core.exceptions import ValidationError
 
 class TickerBase(models.Model):
-    # Constants for market cap choices
     LARGE_CAP = 'Large Cap'
     MID_CAP = 'Mid Cap'
     SMALL_CAP = 'Small Cap'
@@ -13,8 +12,6 @@ class TickerBase(models.Model):
         (MID_CAP, 'Mid Cap'),
         (SMALL_CAP, 'Small Cap'),
     ]
-
-    # Constants for sector choices
     AUTOMOBILE = 'Automobile'
     BANKING = 'Banking'
     CAPITAL_GOODS = 'Capital Goods'
@@ -72,23 +69,35 @@ class TickerBase(models.Model):
     )
 
     def __str__(self):
-        return f"{self.ticker_symbol} ({self.ticker_sector}) - {self.ticker_market_cap}"
+        return f"{self.ticker_symbol.upper()} ({self.ticker_name})"
 
     def save(self, *args, **kwargs):
-        # Validate ticker symbol for table names
+        """
+        Override save to validate ticker_symbol and create four associated tables:
+        1. `<ticker_symbol>_historical_data` - Historical OHLC data table
+        2. `<ticker_symbol>_websocket_data` - Real-time WebSocket data table
+        3. `<ticker_symbol>_future_historical_data` - Futures historical OHLC data table
+        4. `<ticker_symbol>_future_websocket_data` - Futures real-time WebSocket data table
+        """
+        # Validate ticker_symbol
         if not re.match(r'^[a-zA-Z0-9_]+$', self.ticker_symbol):
-            raise ValidationError("Ticker symbol contains invalid characters.")
+            raise ValidationError("Ticker symbol contains invalid characters. Only alphanumeric and underscores are allowed.")
 
-        # Call the original save method to insert the TickerBase record
+        # Ensure ticker_symbol is lowercase for consistency
+        self.ticker_symbol = self.ticker_symbol.lower()
+
+        # Save the TickerBase instance
         super().save(*args, **kwargs)
 
-        # Get the table name using ticker_symbol in lowercase
-        table_name = self.ticker_symbol.lower()
-        wc_table_name = f"{table_name}_wc"
+        # Define descriptive table names
+        base_table = f"{self.ticker_symbol}_historical_data"
+        wc_table = f"{self.ticker_symbol}_websocket_data"
+        future_table = f"{self.ticker_symbol}_future_historical_data"
+        future_wc_table = f"{self.ticker_symbol}_future_websocket_data"
 
-        # SQL query to create the main table
-        create_main_table_query = f"""
-        CREATE TABLE IF NOT EXISTS "{table_name}" (
+        # SQL queries to create the tables
+        create_base_table_query = f"""
+        CREATE TABLE IF NOT EXISTS "{base_table}" (
             id SERIAL PRIMARY KEY,
             datetime TIMESTAMPTZ NOT NULL,
             open_price FLOAT NOT NULL,
@@ -98,23 +107,44 @@ class TickerBase(models.Model):
             volume BIGINT
         )
         """
-
-        # SQL query to create the WebSocket data table
         create_wc_table_query = f"""
-        CREATE TABLE IF NOT EXISTS "{wc_table_name}" (
+        CREATE TABLE IF NOT EXISTS "{wc_table}" (
+            id SERIAL PRIMARY KEY,
+            timestamp TIMESTAMPTZ NOT NULL,
+            ltp FLOAT NOT NULL
+        )
+        """
+        create_future_table_query = f"""
+        CREATE TABLE IF NOT EXISTS "{future_table}" (
+            id SERIAL PRIMARY KEY,
+            datetime TIMESTAMPTZ NOT NULL,
+            open_price FLOAT NOT NULL,
+            high_price FLOAT NOT NULL,
+            low_price FLOAT NOT NULL,
+            close_price FLOAT NOT NULL,
+            volume BIGINT
+        )
+        """
+        create_future_wc_table_query = f"""
+        CREATE TABLE IF NOT EXISTS "{future_wc_table}" (
             id SERIAL PRIMARY KEY,
             timestamp TIMESTAMPTZ NOT NULL,
             ltp FLOAT NOT NULL
         )
         """
 
-        # Execute the queries to create both tables
-        with connection.cursor() as cursor:
-            cursor.execute(create_main_table_query)
-            cursor.execute(create_wc_table_query)
+        # Execute the queries to create tables
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(create_base_table_query)
+                cursor.execute(create_wc_table_query)
+                cursor.execute(create_future_table_query)
+                cursor.execute(create_future_wc_table_query)
+        except Exception as e:
+            raise ValidationError(f"Error creating tables for {self.ticker_symbol}: {str(e)}")
 
 
-# models.py in your Django app (e.g., scannerpro/models.py)
+
 from django.db import models
 from django.core.exceptions import ValidationError
 

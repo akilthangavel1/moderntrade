@@ -5,17 +5,12 @@ from django.http import HttpResponse
 from django.apps import apps
 from .models import TickerBase, AccessToken
 from .histdata import fetch_ohlc_data, process_ohlc_data, calculate_changes, calculate_weekly_ohlc, test_week_data
-from django.apps import apps
-from datetime import datetime, timedelta
 import pandas as pd
-import numpy as np
-import yfinance as yf
 import json
-import time
 from django.db import connection
-from datetime import date
-
-
+import asyncio
+from django.http import StreamingHttpResponse
+from asgiref.sync import sync_to_async
 
 
 
@@ -28,8 +23,10 @@ def fetch_tickers_for_scanner(request):
 def show_homepage(request):
     return render(request, "homepage.html", {})
 
+
 def dummy_homepage(request):
     return render(request, "dummypage.html", {})
+
 
 def create_ticker(request):
     if request.method == 'POST':
@@ -97,11 +94,10 @@ def get_access_token():
         return None  # Shouldn't happen, but just in case
 
 
-def format_symbol(symbol):
+def future_format_symbol(symbol):
     return "NSE:" + symbol + "24NOVFUT"
 
 
-import asyncio
 def get_ticker_data(request):
     ticker_symbol = request.GET.get('ticker_symbol')
     if not ticker_symbol:
@@ -120,11 +116,12 @@ def get_ticker_data(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
-def get_hist_data_raw(ticker_symbol):
+
+def get_hist_future_data_raw(ticker_symbol):
     if not ticker_symbol:
         return JsonResponse({'error': 'Ticker symbol not provided'}, status=400)
     
-    table_name = ticker_symbol.lower()
+    table_name = ticker_symbol.lower() + "_future_historical_data"
     query = f"SELECT * FROM {table_name}"
 
     try:
@@ -139,11 +136,11 @@ def get_hist_data_raw(ticker_symbol):
         return None
     
 
-def get_ticker_data_raw(ticker_symbol):
+def get_ticker_future_data_raw(ticker_symbol):
     if not ticker_symbol:
         return JsonResponse({'error': 'Ticker symbol not provided'}, status=400)
     
-    table_name = ticker_symbol.lower() + "_wc"
+    table_name = ticker_symbol.lower() + "_future_websocket_data"
     query = f"SELECT * FROM {table_name}"
 
     try:
@@ -158,22 +155,21 @@ def get_ticker_data_raw(ticker_symbol):
         print(e)
         return None
 
-import asyncio
-import pandas as pd
-from django.http import StreamingHttpResponse
-from asgiref.sync import sync_to_async
 
 @sync_to_async
 def get_tickers():
     return list(TickerBase.objects.all())
 
+
 @sync_to_async
 def get_hist_data(symbol):
-    return get_hist_data_raw(symbol)
+    return get_hist_future_data_raw(symbol)
+
 
 @sync_to_async
 def get_tick_data(symbol):
-    return get_ticker_data_raw(symbol)
+    return get_ticker_future_data_raw(symbol)
+
 
 async def generate_event_stream():
     while True:
@@ -269,11 +265,9 @@ async def sse_event_view(request):
     return response
 
 
-
-
-def insert_data_into_ticker_table(ticker_symbol, datetime_value, open_price, high_price, low_price, close_price, volume):
-    table_name = ticker_symbol.lower()
-
+def insert_data_into_historical_db(table_name, datetime_value, open_price, high_price, low_price, close_price, volume):
+    table_name = table_name.lower()
+    print(table_name)
     insert_query = f"""
     INSERT INTO "{table_name}" (datetime, open_price, high_price, low_price, close_price, volume)
     VALUES (%s, %s, %s, %s, %s, %s)
@@ -287,13 +281,9 @@ def insert_data_into_ticker_table(ticker_symbol, datetime_value, open_price, hig
         print(f"Error inserting data into {table_name} table: {e}")
 
 
-
-
-
-
-def data_exists(ticker_symbol, datetime_value):
+def data_exists(table_name, datetime_value):
     try:
-        table_name = ticker_symbol.lower()
+        table_name = table_name.lower()
         query = f"SELECT EXISTS(SELECT 1 FROM {table_name} WHERE datetime = %s)"
         with connection.cursor() as cursor:
             cursor.execute(query, [datetime_value])
@@ -303,41 +293,41 @@ def data_exists(ticker_symbol, datetime_value):
         return False
     
 
-def histdata_update_db(request):
-    ticker_details = TickerBase.objects.all()
-    for ticker in ticker_details:
-        try:
-            print(f"Processing ticker: {ticker.ticker_symbol}")
-            from_date = (datetime.now() - timedelta(days=28)).strftime("%d/%m/%Y")
-            to_date = (datetime.now() - timedelta(days=1)).strftime("%d/%m/%Y")
-            symbol = format_symbol(ticker.ticker_symbol)
-            resolution = "1"
-            client_id = "MMKQTWNJH3-100"
-            access_token = get_access_token()
-            ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
-            print(ohlc_daily_data)
-            processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
-            print(processed_daily_ohlc)
-            for _, row in processed_daily_ohlc.iterrows():
-                if not data_exists(ticker.ticker_symbol, row.datetime):
-                    print(row.datetime)
-                    insert_data_into_ticker_table(
-                        ticker_symbol=ticker.ticker_symbol, 
-                        datetime_value=row.datetime,
-                        open_price=row.open, 
-                        high_price=row.high, 
-                        low_price=row.low, 
-                        close_price=row.close, 
-                        volume=row.volume   
-                    )
-                    print(f"Inserted data for {ticker.ticker_symbol} on {row.datetime}.")
-                else:
-                    print(f"Data for {ticker.ticker_symbol} on {row.datetime} already exists. Skipping.")
+# def histdata_update_db(request):
+#     ticker_details = TickerBase.objects.all()
+#     for ticker in ticker_details:
+#         try:
+#             print(f"Processing ticker: {ticker.ticker_symbol}")
+#             from_date = (datetime.now() - timedelta(days=28)).strftime("%d/%m/%Y")
+#             to_date = (datetime.now() - timedelta(days=1)).strftime("%d/%m/%Y")
+#             symbol = format_symbol(ticker.ticker_symbol)
+#             resolution = "1"
+#             client_id = "MMKQTWNJH3-100"
+#             access_token = get_access_token()
+#             ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
+#             print(ohlc_daily_data)
+#             processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
+#             print(processed_daily_ohlc)
+#             for _, row in processed_daily_ohlc.iterrows():
+#                 if not data_exists(ticker.ticker_symbol, row.datetime):
+#                     print(row.datetime)
+#                     insert_data_into_ticker_table(
+#                         ticker_symbol=ticker.ticker_symbol, 
+#                         datetime_value=row.datetime,
+#                         open_price=row.open, 
+#                         high_price=row.high, 
+#                         low_price=row.low, 
+#                         close_price=row.close, 
+#                         volume=row.volume   
+#                     )
+#                     print(f"Inserted data for {ticker.ticker_symbol} on {row.datetime}.")
+#                 else:
+#                     print(f"Data for {ticker.ticker_symbol} on {row.datetime} already exists. Skipping.")
         
-        except Exception as e:
-            print(f"Error processing ticker {ticker.ticker_symbol}: {e}")
+#         except Exception as e:
+#             print(f"Error processing ticker {ticker.ticker_symbol}: {e}")
     
-    return HttpResponse("Data Inserted")
+#     return HttpResponse("Data Inserted")
 
 
 

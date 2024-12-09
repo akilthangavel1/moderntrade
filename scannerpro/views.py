@@ -95,7 +95,7 @@ def get_access_token():
 
 
 def future_format_symbol(symbol):
-    return "NSE:" + symbol + "24NOVFUT"
+    return "NSE:" + symbol + "24DECFUT"
 
 
 def get_ticker_data(request):
@@ -141,6 +141,7 @@ def get_ticker_future_data_raw(ticker_symbol):
         return JsonResponse({'error': 'Ticker symbol not provided'}, status=400)
     
     table_name = ticker_symbol.lower() + "_future_websocket_data"
+    # print(table_name)
     query = f"SELECT * FROM {table_name}"
 
     try:
@@ -178,9 +179,12 @@ async def generate_event_stream():
             ticker_list = []
             for ticker in tickers:
                 try:
-                    hist_data = await get_hist_data(ticker.ticker_symbol)
-                    tick_data = await get_tick_data(ticker.ticker_symbol)
                     
+                    hist_data = await get_hist_data(ticker.ticker_symbol)
+                    
+                    tick_data = await get_tick_data(ticker.ticker_symbol)
+                    # print(tick_data)
+                    # print("##########################################")
                     hist_df = pd.DataFrame(hist_data).drop('id', axis=1)
                     hist_df.rename(columns={
                         'open_price': 'open',
@@ -209,7 +213,7 @@ async def generate_event_stream():
                     df = pd.concat([hist_df, tick_ohlc_df], ignore_index=True)
                     df['datetime'] = pd.to_datetime(df['datetime'])
                     df.set_index('datetime', inplace=True)
-
+                    
                     # Resample to daily timeframe
                     daily_df = df.resample('D').agg({
                         'open': 'first',
@@ -367,3 +371,6 @@ def api_home(request):
 
 def dynamicscanner(request):
     return render(request, 'index.html', {})
+
+def option_screen(request):
+    return render(request, 'optionscr.html', {})

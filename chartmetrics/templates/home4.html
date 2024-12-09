@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Stock Table</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f4f7fc; /* Subtle light gray for better contrast */
+            font-family: 'Arial', sans-serif;
+        }
+
+        .table-container {
+            max-width: 95%;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .action-bar h2 {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .filter-group input, .filter-group select {
+            max-width: 300px;
+        }
+
+        thead th {
+            background: linear-gradient(to right, #0d6efd, #42a5f5);
+            color: #ffffff;
+            text-align: center;
+            vertical-align: middle;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        tbody tr {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        tbody tr:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-rounded {
+            border-radius: 50px;
+        }
+
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dropdown-menu {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-view {
+            display: none;
+        }
+
+        /* Responsive Card View for Mobile */
+        @media (max-width: 768px) {
+            .table-view {
+                display: none;
+            }
+            .card-view {
+                display: block;
+            }
+
+            .data-card {
+                margin-bottom: 15px;
+                border: 1px solid #e0e0e0;
+                border-radius: 10px;
+                padding: 15px;
+                background: #ffffff;
+            }
+
+            .data-card h5 {
+                margin-bottom: 10px;
+                font-weight: bold;
+                color: #0d6efd;
+            }
+
+            .data-card span {
+                font-size: 14px;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="table-container">
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <h2>Stock Data Table</h2>
+                <div class="d-flex filter-group gap-2">
+                    <select id="filterOptions" class="form-select">
+                        <option value="">Filter by Option Type</option>
+                        <option value="Call">Call</option>
+                        <option value="Put">Put</option>
+                    </select>
+                    <input id="searchInput" type="text" class="form-control" placeholder="Search by Ticker or Column">
+                    <button class="btn btn-primary btn-rounded" onclick="filterTable()">Apply Filters</button>
+                    <button class="btn btn-secondary btn-rounded" onclick="resetFilters()">Reset</button>
+                </div>
+            </div>
+
+            <!-- Table View -->
+            <div class="table-view">
+                <table id="stockTable" class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>XCH</th>
+                            <th>LTP</th>
+                            <th>Qty.</th>
+                            <th>Chg</th>
+                            <th>% Chg</th>
+                            <th>Bid Qty</th>
+                            <th>Bid</th>
+                            <th>Open</th>
+                            <th>P.Close</th>
+                            <th>Low</th>
+                            <th>High</th>
+                            <th>Avg Price</th>
+                            <th>T.Volume</th>
+                            <th>Total Value</th>
+                            <th>OI</th>
+                            <th>Option Type</th>
+                            <th>Exp. Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example Rows -->
+                        <tr>
+                            <td>ABC</td>
+                            <td>XCH-1</td>
+                            <td>123.45</td>
+                            <td>100</td>
+                            <td>+5.00</td>
+                            <td>+4.2%</td>
+                            <td>50</td>
+                            <td>123.40</td>
+                            <td>120.00</td>
+                            <td>115.00</td>
+                            <td>110.00</td>
+                            <td>125.00</td>
+                            <td>121.00</td>
+                            <td>5000</td>
+                            <td>600,000</td>
+                            <td>10,000</td>
+                            <td>Call</td>
+                            <td>12/31/2024</td>
+                        </tr>
+                        <tr>
+                            <td>ABC</td>
+                            <td>XCH-1</td>
+                            <td>123.45</td>
+                            <td>100</td>
+                            <td>+5.00</td>
+                            <td>+4.2%</td>
+                            <td>50</td>
+                            <td>123.40</td>
+                            <td>120.00</td>
+                            <td>115.00</td>
+                            <td>110.00</td>
+                            <td>125.00</td>
+                            <td>121.00</td>
+                            <td>5000</td>
+                            <td>600,000</td>
+                            <td>10,000</td>
+                            <td>Call</td>
+                            <td>12/31/2024</td>
+                        </tr>
+                        <tr>
+                            <td>ABC</td>
+                            <td>XCH-1</td>
+                            <td>123.45</td>
+                            <td>100</td>
+                            <td>+5.00</td>
+                            <td>+4.2%</td>
+                            <td>50</td>
+                            <td>123.40</td>
+                            <td>120.00</td>
+                            <td>115.00</td>
+                            <td>110.00</td>
+                            <td>125.00</td>
+                            <td>121.00</td>
+                            <td>5000</td>
+                            <td>600,000</td>
+                            <td>10,000</td>
+                            <td>Call</td>
+                            <td>12/31/2024</td>
+                        </tr>
+                        <tr>
+                            <td>ABC</td>
+                            <td>XCH-1</td>
+                            <td>123.45</td>
+                            <td>100</td>
+                            <td>+5.00</td>
+                            <td>+4.2%</td>
+                            <td>50</td>
+                            <td>123.40</td>
+                            <td>120.00</td>
+                            <td>115.00</td>
+                            <td>110.00</td>
+                            <td>125.00</td>
+                            <td>121.00</td>
+                            <td>5000</td>
+                            <td>600,000</td>
+                            <td>10,000</td>
+                            <td>Call</td>
+                            <td>12/31/2024</td>
+                        </tr>
+                        <tr>
+                            <td>ABC</td>
+                            <td>XCH-1</td>
+                            <td>123.45</td>
+                            <td>100</td>
+                            <td>+5.00</td>
+                            <td>+4.2%</td>
+                            <td>50</td>
+                            <td>123.40</td>
+                            <td>120.00</td>
+                            <td>115.00</td>
+                            <td>110.00</td>
+                            <td>125.00</td>
+                            <td>121.00</td>
+                            <td>5000</td>
+                            <td>600,000</td>
+                            <td>10,000</td>
+                            <td>Call</td>
+                            <td>12/31/2024</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Card View for Mobile -->
+            <div class="card-view">
+                <div class="data-card">
+                    <h5>ABC</h5>
+                    <span><strong>XCH:</strong> XCH-1</span>
+                    <span><strong>LTP:</strong> 123.45</span>
+                    <span><strong>Qty:</strong> 100</span>
+                    <span><strong>Chg:</strong> +5.00</span>
+                    <span><strong>% Chg:</strong> +4.2%</span>
+                    <span><strong>Option Type:</strong> Call</span>
+                    <span><strong>Exp. Date:</strong> 12/31/2024</span>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        // Filter Table Data
+        function filterTable() {
+            const input = document.getElementById("searchInput").value.toUpperCase();
+            const filterOption = document.getElementById("filterOptions").value.toUpperCase();
+            const table = document.getElementById("stockTable");
+            const rows = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName("td");
+                const ticker = cells[0]?.innerText.toUpperCase();
+                const optionType = cells[16]?.innerText.toUpperCase();
+                let match = true;
+
+                if (input && ticker.indexOf(input) === -1) match = false;
+                if (filterOption && optionType.indexOf(filterOption) === -1) match = false;
+
+                rows[i].style.display = match ? "" : "none";
+            }
+        }
+
+        // Reset Filters
+        function resetFilters() {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("filterOptions").value = "";
+            filterTable();
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

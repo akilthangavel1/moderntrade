@@ -15,4 +15,5 @@ urlpatterns = [
     path('api/get_tickers', views.fetch_tickers_for_scanner, name='get_tickers'),  # New endpoint for populating dropdown
     path('api/home', views.api_home, name='api_home'),
     path('dynamicscanner/', views.dynamicscanner, name='dynamicscanner'),
+    path('optionscreener/', views.option_screen, name='option_screen'),
 ]

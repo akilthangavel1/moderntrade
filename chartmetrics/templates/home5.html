@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Stock Table</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f8;
+            font-family: Arial, sans-serif;
+        }
+
+        .container-95 {
+            max-width: 95%;
+            margin: auto;
+        }
+
+        .nifty-header {
+            background-color: #ffffff;
+            color: #0d6efd;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nifty-left {
+            text-align: left;
+        }
+
+        .nifty-left h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+            color: #084298;
+        }
+
+        .nifty-left .nifty-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+            margin-top: 10px;
+        }
+
+        .nifty-right {
+            text-align: right;
+        }
+
+        .nifty-right .filter-container {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .nifty-right input[type="date"] {
+            width: 200px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .nifty-right .btn-filter {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #0d6efd;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nifty-right .btn-filter:hover {
+            background-color: #084298;
+        }
+
+        .table-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: #f8f9fa;
+            color: #0d6efd;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        tbody td {
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.9rem;
+            padding: 10px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #e8f4fd;
+        }
+
+        @media (max-width: 768px) {
+            .nifty-left h1 {
+                font-size: 1.2rem;
+            }
+
+            .nifty-left .nifty-value {
+                font-size: 1.8rem;
+            }
+
+            .nifty-right .filter-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nifty-right input[type="date"],
+            .nifty-right .btn-filter {
+                width: 100%;
+            }
+        }
+
+        /* Custom Navbar Styles */
+        .navbar {
+            background-color: #f8f9fa; /* Light grey background */
+            border-bottom: 1px solid #ddd; /* Light border */
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            color: #007bff; /* Blue color for links */
+        }
+
+        .navbar-light .navbar-nav .nav-link:hover {
+            color: #0056b3; /* Darker blue on hover */
+        }
+
+        .navbar-light .navbar-toggler-icon {
+            background-color: #007bff; /* Blue icon for navbar toggle */
+        }
+
+        .navbar-brand {
+            color: #007bff; /* Blue brand name */
+        }
+
+        .navbar-brand:hover {
+            color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Stock Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Stocks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Options</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-5">
+        <!-- Nifty Header -->
+        <div class="container-95 nifty-header">
+            <!-- Left side with Nifty Index -->
+            <div class="nifty-left">
+                <!-- <h1>Nifty Index:</h1> -->
+                <!-- <div class="nifty-value" id="nifty-value">23,333.00 (-1.6%)</div> -->
+            </div>
+
+            <!-- Right side with Date Filter and Apply Filter Button -->
+            <div class="nifty-right">
+                <div class="filter-container">
+                    <!-- Dropdown to select stock name -->
+                    <select id="stock-name" class="form-select" style="width: 200px;">
+                        <option value="" selected>Select Stock</option>
+                        <option value="Stock1">Stock1</option>
+                        <option value="Stock2">Stock2</option>
+                        <option value="Stock3">Stock3</option>
+                    </select>
+            
+                    <!-- Dropdown to select strike price -->
+                    <select id="strike-price" class="form-select" style="width: 200px;">
+                        <option value="" selected>Select Strike Price</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="300">300</option>
+                    </select>
+            
+                    <!-- Date filter -->
+                    <input type="date" id="date-filter">
+            
+                    <!-- Apply Filter Button -->
+                    <button class="btn-filter" onclick="applyFilter()">Apply Filter</button>
+                </div>
+            </div>
+            
+            
+        </div>
+
+        <!-- Table -->
+        <div class="container-95 table-container">
+            <table class="table table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>XCH</th>
+                        <th>LTP</th>
+                        <th>Qty.</th>
+                        <th>Chg</th>
+                        <th>% Chg</th>
+                        <th>Bid Qty</th>
+                        <th>Bid</th>
+                        <th>Open</th>
+                        <th>P.Close</th>
+                        <th>Low</th>
+                        <th>High</th>
+                        <th>Avg Price</th>
+                        <th>T.Volume</th>
+                        <th>Total Value</th>
+                        <th>OI</th>
+                        <th>No. of Contracts</th>
+                        <th>Strike Price</th>
+                        <th>Exp. Date</th>
+                        <th>Option Type</th>
+                        <th>P.Open</th>
+                        <th>OI-Combined Fut</th>
+                        <th>5-Days Avg Vol</th>
+                        <th>Calculated Column 1</th>
+                        <th>Calculated Column 2</th>
+                        <th>Calculated Column 3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Example</td>
+                        <td>XCH-1</td>
+                        <td>123.45</td>
+                        <td>100</td>
+                        <td>+5.00</td>
+                        <td>+4.2%</td>
+                        <td>50</td>
+                        <td>123.40</td>
+                        <td>120.00</td>
+                        <td>115.00</td>
+                        <td>110.00</td>
+                        <td>125.00</td>
+                        <td>121.00</td>
+                        <td>5000</td>
+                        <td>600,000</td>
+                        <td>10,000</td>
+                        <td>50</td>
+                        <td>200</td>
+                        <td>12/31/2024</td>
+                        <td>Call</td>
+                        <td>5.50</td>
+                        <td>15,000</td>
+                        <td>250</td>
+                        <td>1000</td>
+                        <td>2000</td>
+                        <td>3000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="data-container">
+        <!-- Data fetched via AJAX will be rendered here -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function applyFilter() {
+            const stockName = document.getElementById("stock-name").value;
+            const strikePrice = document.getElementById("strike-price").value;
+            const date = document.getElementById("date-filter").value;
+    
+            // Validate the input
+            if (!stockName || !strikePrice || !date) {
+                alert("Please select all filters!");
+                return;
+            }
+    
+            // Construct request data
+            const requestData = {
+                stock_name: stockName,
+                strike_price: strikePrice,
+                date: date
+            };
+    
+            // Send AJAX request
+            fetch('/get-stock-data/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken() // Include CSRF token for Django if applicable
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Update the table with new data
+                renderTable(data);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+    
+        function renderTable(data) {
+            // Clear the existing table data
+            const container = document.getElementById("data-container");
+            container.innerHTML = "";
+    
+            // Create a table dynamically
+            let table = "<table class='table table-striped table-bordered align-middle'><thead><tr>";
+            table += `
+                <th>Ticker</th>
+                <th>Strike Price</th>
+                <th>Open</th>
+                <th>Close</th>
+                <th>Volume</th>
+            </tr></thead><tbody>`;
+    
+            // Populate the table rows
+            data.forEach(row => {
+                table += `
+                <tr>
+                    <td>${row.ticker}</td>
+                    <td>${row.strike_price}</td>
+                    <td>${row.open}</td>
+                    <td>${row.close}</td>
+                    <td>${row.volume}</td>
+                </tr>`;
+            });
+    
+            table += "</tbody></table>";
+            container.innerHTML = table;
+        }
+    
+        // CSRF token helper for Django
+        function getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+    </script>
+    
+</body>
+</html>

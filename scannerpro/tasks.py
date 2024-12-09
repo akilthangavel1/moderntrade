@@ -29,7 +29,7 @@ def process_stock_data(message):
 
         print(f"Original Symbol: {symbol}")
         # Extract the model name by removing "NSE:" and "-EQ"
-        symbol = symbol.replace("NSE:", "").replace("-EQ", "").replace("24NOVFUT", "")
+        symbol = symbol.replace("NSE:", "").replace("-EQ", "").replace("24DECFUT", "")
         print(f"Derived Model Name: {symbol}")
         wc_table_name = f"{symbol.lower()}_future_websocket_data"
         insert_query = f"""

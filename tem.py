@@ -60,7 +60,7 @@
 
 # server {
 #     listen 80;
-#     server_name 16.171.143.91;
+#     server_name 3.91.56.58;
 
 #     location = /favicon.ico { access_log off; log_not_found off; }
 #     location /static/ {
@@ -73,8 +73,54 @@
 #     }
 # }
     # <script src="https://kit.fontawesome.com/528c9fbb89.js" crossorigin="anonymous"></script>
+# CREATE USER akil WITH PASSWORD 'Akil@2007';
 # ALTER ROLE akil SET client_encoding TO 'utf8';
 # ALTER ROLE akil SET default_transaction_isolation TO 'read committed';
 # ALTER ROLE akil SET timezone TO 'UTC';
 # GRANT ALL PRIVILEGES ON DATABASE tradebubble TO akil;
 # ALTER DATABASE tradebubble OWNER TO akil;
+
+# [Unit]
+# Description=gunicorn daemon
+# Requires=gunicorn.socket
+# After=network.target
+
+# [Service]
+# User=ubuntu
+# Group=www-data
+# WorkingDirectory=/home/ubuntu/moderntrade
+# ExecStart=/home/ubuntu/moderntrade/venv/bin/gunicorn \
+#           --access-logfile - \
+#           --workers 3 \
+#           --bind unix:/run/gunicorn.sock \
+#           -k uvicorn.workers.UvicornWorker \
+#           moderntrade.asgi:application
+
+# [Install]
+# WantedBy=multi-user.target
+
+# [program:celery]
+# directory=/home/ubuntu/moderntrade                 
+# command=/home/ubuntu/moderntrade/venv/bin/celery -A moderntrade worker --loglevel=INFO
+# user=ubuntu                                       
+# numprocs=1                                        
+# stdout_logfile=/var/log/celery-worker.log         
+# stderr_logfile=/var/log/celery-worker.log         
+# autostart=true                                     
+# autorestart=true                                 
+# startsecs=10                                    
+# stopwaitsecs=600                                 
+# priority=100                                      
+
+
+# [program:fyers_websocket]
+# directory=/home/ubuntu/moderntrade               
+# command=/home/ubuntu/moderntrade/venv/bin/python manage.py future_fyers_websocket
+# user=ubuntu                                       
+# stdout_logfile=/var/log/fyers_websocket.log       
+# stderr_logfile=/var/log/fyers_websocket.log      
+# autostart=true                                    
+# autorestart=true                                  
+# startsecs=10                                      
+# stopwaitsecs=600                                  
+# priority=100                                      

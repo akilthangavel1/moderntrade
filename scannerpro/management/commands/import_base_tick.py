@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Path to the processed Excel file
-        file_path = "/home/akil/Desktop/Upwork/Trading system - Hari/moderntrade/blocks/data/Processed_Futures.xlsx"
+        file_path = "Processed_Futures.xlsx"
         
         try:
             # Read the processed Excel file into a pandas DataFrame

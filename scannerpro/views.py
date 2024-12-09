@@ -95,7 +95,7 @@ def get_access_token():
 
 
 def future_format_symbol(symbol):
-    return "NSE:" + symbol + "24DECFUT"
+    return "NSE:" + symbol + "26DECFUT"
 
 
 def get_ticker_data(request):

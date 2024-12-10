@@ -1,4 +1,3 @@
-# scannerpro/management/commands/start_fyers_socket.py
 from django.core.management.base import BaseCommand
 from fyers_apiv3.FyersWebsocket import data_ws
 from scannerpro.tasks import process_stock_data
@@ -23,7 +22,7 @@ class Command(BaseCommand):
 
         def onopen():
             data_type = "SymbolUpdate"
-            symbols = list(TickerBase.objects.values_list('ticker_symbol', flat=True))
+            symbols = list(TickerBase.objects.values_list('ticker_symbol', flat=True)[50:100])
             fyers_symbols = [(future_format_symbol(stock)).upper() for stock in symbols]
             fyers.subscribe(symbols=fyers_symbols, data_type=data_type)
             fyers.keep_running()

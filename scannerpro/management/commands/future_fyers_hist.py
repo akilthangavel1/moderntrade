@@ -20,7 +20,7 @@ class Command(BaseCommand):
         for ticker in ticker_details:
             try:
                 self.stdout.write(self.style.SUCCESS(f"Processing ticker: {ticker.ticker_symbol}"))
-                from_date = (datetime.now() - timedelta(days=28)).strftime("%d/%m/%Y")
+                from_date = (datetime.now() - timedelta(days=14)).strftime("%d/%m/%Y")
                 to_date = (datetime.now() - timedelta(days=1)).strftime("%d/%m/%Y")
                 print(ticker.ticker_symbol)
                 symbol = future_format_symbol(ticker.ticker_symbol.upper())
@@ -29,7 +29,6 @@ class Command(BaseCommand):
                 access_token = get_access_token()
                 print(symbol)
                 ohlc_daily_data = fetch_ohlc_data(symbol, resolution, from_date, to_date, client_id, access_token)
-                print(ohlc_daily_data)
                 processed_daily_ohlc = process_ohlc_data(ohlc_daily_data)
                 time.sleep(1)
                 for _, row in processed_daily_ohlc.iterrows():
@@ -43,7 +42,7 @@ class Command(BaseCommand):
                             close_price=row.close,
                             volume=row.volume
                         )
-                        self.stdout.write(self.style.SUCCESS(f"Inserted data for {ticker.ticker_symbol} on {row.datetime}."))
+                        # self.stdout.write(self.style.SUCCESS(f"Inserted data for {ticker.ticker_symbol} on {row.datetime}."))
                     else:
                         self.stdout.write(self.style.WARNING(f"Data for {ticker.ticker_symbol} on {row.datetime} already exists. Skipping."))
             

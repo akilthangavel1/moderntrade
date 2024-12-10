@@ -5,3 +5,6 @@
 {"level":"ERROR","location":"[get_call:143] fyersModel","message":{"API":"/options-chain-v3","Error":{"message":"Please provide valid token","code":-15,"s":"error"}},"timestamp":"2024-11-15 20:32:30,275+0530","service":"FyersAPI"}
 {"level":"ERROR","location":"[get_call:143] fyersModel","message":{"API":"/options-chain-v3","Error":{"message":"Please provide valid token","code":-15,"s":"error"}},"timestamp":"2024-11-15 20:33:50,878+0530","service":"FyersAPI"}
 {"level":"ERROR","location":"[get_call:143] fyersModel","message":{"API":"/options-chain-v3","Error":{"message":"Please provide valid token","code":-15,"s":"error"}},"timestamp":"2024-11-15 20:34:32,133+0530","service":"FyersAPI"}
+{"level":"ERROR","location":"[get_call:143] fyersModel","message":{"API":"/history","Error":{"code":-16,"message":"Could not authenticate the user","s":"error"}},"timestamp":"2024-12-10 11:46:46,151+0530","service":"FyersAPI"}
+{"level":"ERROR","location":"[get_call:143] fyersModel","message":{"API":"/history","Error":{"code":-300,"message":"Invalid symbol provided","s":"error"}},"timestamp":"2024-12-10 11:47:38,108+0530","service":"FyersAPI"}
+{"level":"ERROR","location":"[get_call:143] fyersModel","message":{"API":"/history","Error":{"code":-300,"message":"Invalid symbol provided","s":"error"}},"timestamp":"2024-12-10 11:48:35,405+0530","service":"FyersAPI"}

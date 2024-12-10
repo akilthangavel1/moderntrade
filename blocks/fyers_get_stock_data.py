@@ -8,7 +8,7 @@ access_token = creds.access_token
 fyers = fyersModel.FyersModel(client_id=client_id, is_async=False, token=access_token, log_path="")
 
 data = {
-    "symbol":"NSE:WIPRO-EQ",
+    "symbol":"NSE:AARTIIND24DECFUT",
     "resolution":"D",
     "date_format":"0",
     "range_from":"1690895316",
